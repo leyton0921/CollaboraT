@@ -2,9 +2,8 @@
 import UploadCSV from '../components/UploadCSV';
 import TaskManager from '../components/TaskManager';
 import UserTable from '../components/UserTable';
-import UserTasks from '../components/UserTask';
 import { useState, useEffect } from 'react';
-import { Navbar } from '../components/navbar';
+import { Navbar } from '../UI/navbar';
 import { useRouter } from 'next/navigation';
 
 export default function Home() {
@@ -22,7 +21,6 @@ export default function Home() {
   }, [isAdmin, router]);
 
   if (!isAdmin) {
-    // Puedes mostrar un mensaje de carga o nada mientras se redirige
     return <p>Redirecting...</p>;
   }
 
