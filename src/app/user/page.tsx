@@ -3,7 +3,7 @@ import UserTasks from '../components/UserTask'; // Importar componente de tareas
 import { Navbar } from '../UI/navbar'; // Importar barra de navegación
 
 export default function UserPage() {
-  const userId = 1;  // Simulación de usuario autenticado
+  const userId = 2;  // Simulación de usuario autenticado
 
   return (
     <div>

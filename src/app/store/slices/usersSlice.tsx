@@ -14,7 +14,7 @@ interface Task {
 interface User {
   id: number;
   name: string;
-  rol: string;
+  role: string;
   tasks: Task[]; // Tareas asignadas a este usuario
 }
 
