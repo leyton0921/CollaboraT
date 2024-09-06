@@ -2,6 +2,7 @@
 import UploadCSV from '../components/UploadCSV';
 import TaskManager from '../components/TaskManager';
 import UserTable from '../components/UserTable';
+import UserTasks from '../components/UserTask';
 import { useState, useEffect } from 'react';
 import { Navbar } from '../UI/navbar';
 import { useRouter } from 'next/navigation';
@@ -21,20 +22,20 @@ export default function Home() {
   }, [isAdmin, router]);
 
   if (!isAdmin) {
+    // Puedes mostrar un mensaje de carga o nada mientras se redirige
     return <p>Redirecting...</p>;
   }
 
   return (
     <div>
-      <Navbar links={links} />
-      {isAdmin ? (
-        <>
+    
+        <Navbar />
           <h1>Admin Panel</h1>
           <UploadCSV />
           <UserTable />
           <TaskManager />
-        </>
-      ) : null}
+        
+    
     </div>
   );
 }
