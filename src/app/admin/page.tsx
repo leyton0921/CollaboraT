@@ -28,20 +28,14 @@ export default function Home() {
 
   return (
     <div>
-      {isAdmin ? (
-        <>
+    
         <Navbar />
           <h1>Admin Panel</h1>
           <UploadCSV />
           <UserTable />
           <TaskManager />
-        </>
-      ) : (
-        <>
-          <h1>User View</h1>
-          <UserTasks userId={userId} />
-        </>
-      )}
+        
+    
     </div>
   );
 }
