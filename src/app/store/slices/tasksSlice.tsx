@@ -1,12 +1,16 @@
 "use client";
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+// Definición de la estructura de una tarea
 interface Task {
   id: number;
   title: string;
-  assignedUserId?: number;
+  description: string;
+  assignedUserId: number;
+  completed: boolean;
 }
 
+// Definición del estado inicial
 interface TasksState {
   tasks: Task[];
 }
@@ -22,15 +26,14 @@ const tasksSlice = createSlice({
     addTask: (state, action: PayloadAction<Task>) => {
       state.tasks.push(action.payload);
     },
-    assignTask: (state, action: PayloadAction<{ taskId: number; userId: number }>) => {
-      const { taskId, userId } = action.payload;
-      const task = state.tasks.find(task => task.id === taskId);
-      if (task) {
-        task.assignedUserId = userId;
+    updateTask: (state, action: PayloadAction<Task>) => {
+      const index = state.tasks.findIndex(task => task.id === action.payload.id);
+      if (index !== -1) {
+        state.tasks[index] = action.payload;
       }
     },
   },
 });
 
-export const { addTask, assignTask } = tasksSlice.actions;
+export const { addTask, updateTask } = tasksSlice.actions;
 export default tasksSlice.reducer;
