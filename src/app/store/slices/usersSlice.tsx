@@ -1,11 +1,21 @@
-"use client";
+// src/store/slices/usersSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface User {
+interface Task {
+  id: number;
+  title: string;
+  description: string;
+  assignedUserId: number;
+  completed: boolean;
+  assignedDate: string;
+  dueDate: string;
+}
+
+export interface User {
   id: number;
   name: string;
-  rol:string;
-
+  role: string;
+  tasks: Task[]; 
 }
 
 interface UsersState {
@@ -26,8 +36,19 @@ const usersSlice = createSlice({
     addUser: (state, action: PayloadAction<User>) => {
       state.users.push(action.payload);
     },
+    assignTaskToUser: (state, action: PayloadAction<{ userId: number; task: Task }>) => {
+      const { userId, task } = action.payload;
+      const user = state.users.find((user) => user.id === userId);
+      if (user) {
+        user.tasks = user.tasks || [];
+        user.tasks.push(task);
+      } else {
+        console.error('User not found:', userId);
+      }
+    },
   },
 });
 
-export const { setUsers, addUser } = usersSlice.actions;
+
+export const { setUsers, addUser, assignTaskToUser } = usersSlice.actions;
 export default usersSlice.reducer;

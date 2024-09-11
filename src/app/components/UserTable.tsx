@@ -11,7 +11,7 @@ const UserTable = () => {
       <thead>
         <tr className="text-left">
           <th className="py-2 pl-4">Name</th>
-          <th className="py-2">rol</th>
+          <th className="py-2">role</th>
           <th className="py-2">Assign Task</th>
         </tr>
       </thead>
@@ -22,9 +22,9 @@ const UserTable = () => {
               <span className="h-8 w-8 bg-purple-300 rounded-full flex items-center justify-center text-white font-bold">{user.name.charAt(0).toUpperCase()}</span>
               <span>{user.name}</span>
             </td>
-            <td className="py-4">{user.rol || "no rol"}</td>
+            <td className="py-4">{user.role || "no rol"}</td>
 
-            <td className="py-4">{user.rol || 'No role assigned'}</td>
+            <td className="py-4">{user.role || 'No role assigned'}</td>
 
             <td className="py-4 text-center">
               <input type="checkbox" className="h-5 w-5 text-green-600 rounded-md" />
