@@ -1,5 +1,7 @@
 "use client"
 import UploadCSV from '../components/UploadCSV';
+import TaskManager from '../components/TaskManager';
+
 
 import UserTable from '../components/UserTable';
 import { useState, useEffect } from 'react';
@@ -31,6 +33,7 @@ export default function Home() {
         <Navbar  links={links}/>
           <UploadCSV />
           <UserTable />
+          <TaskManager/>
         
     
     </div>
