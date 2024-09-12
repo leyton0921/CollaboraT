@@ -1,25 +1,21 @@
-"use client"
-import UploadCSV from '../components/UploadCSV';
+'use client'
 import TaskManager from '../components/TaskManager';
-
-
-import UserTable from '../components/UserTable';
 import { useState, useEffect } from 'react';
 import { Navbar } from '../UI/navbar';
 import { useRouter } from 'next/navigation';
 
-
-export default function Home() {
+export default function AssignTasks() {
   const [isAdmin, setIsAdmin] = useState(true);  // Cambiar a false para la vista de usuario
   const router = useRouter();
+  
   const links = [
-    { href: "/assignTasks", name: "assign tasks" },
-    { href: "/admin", name: "Home Admnin" }
+    { href: "/assignTask", name: "Assign Tasks" },
+    { href: "/admin", name: "Home Admin" }  
   ];
 
   useEffect(() => {
     if (!isAdmin) {
-      router.push('/user');  
+      router.push('/user');  // Redirect to user view if not admin
     }
   }, [isAdmin, router]);
 
@@ -29,13 +25,8 @@ export default function Home() {
 
   return (
     <div>
-    
-        <Navbar  links={links}/>
-          <UploadCSV />
-          <UserTable />
-          <TaskManager/>
-        
-    
+      <Navbar links={links} />
+      <TaskManager />
     </div>
   );
 }

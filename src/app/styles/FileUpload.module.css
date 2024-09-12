@@ -1,0 +1,30 @@
+.file-upload-container {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .file-input {
+    display: none;
+  }
+  
+  .file-label {
+    background-color: #f3e8ff;
+    color: #7c3aed;
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .file-label:hover {
+    background-color: #e9d5ff;
+  }
+  
+  .file-icon {
+    margin-left: 0.75rem;
+    font-size: 1.125rem;
+  }
+  

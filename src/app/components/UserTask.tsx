@@ -1,7 +1,7 @@
-'use client'
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
-import styles from '../styles/UserTasks.module.css';
+import Style from '../styles/UserTasks.module.css'; 
+import { CiCalendar } from "react-icons/ci";
 
 interface UserTasksProps {
   userId: number;
@@ -17,23 +17,43 @@ const UserTasks = ({ userId }: UserTasksProps) => {
   }
 
   return (
-    <div className={styles.tasksContainer}>
-      <h2>Tus Tareas</h2>
-      <ul className={styles.taskList}>
+    <div className={Style['tasks-container']}> {/* Corrected className usage */}
+      <h2 className={Style['tasks-title']}>Task List</h2>
+      <ul className={Style['list']}>
         {user.tasks && user.tasks.length > 0 ? (
           user.tasks.map((task) => (
-            <li key={task.id} className={styles.taskItem}>
-              <h3>{task.title}</h3>
-              <p>{task.description}</p>
-              <p><strong>Asignada:</strong> {new Date(task.assignedDate).toLocaleDateString()}</p>
-              <p><strong>Fecha límite:</strong> {new Date(task.dueDate).toLocaleDateString()}</p>
+            <li key={task.id} className={Style['task-item']}> {/* Corrected className usage */}
+              <div className={Style['task-header']}>
+                <h3 className={Style['task-title']}>{task.title}</h3>
+                <span
+                  className={`${Style['task-status']} ${
+                    task.completed ? Style['in-progress'] : Style['todo']
+                  }`} 
+                >
+                  {task.completed ? 'In Progress' : 'Todo'} {/* Display meaningful text */}
+                </span>
+              </div>
+              <p className={Style['task-description']}>{task.description}</p>
+              <div className={Style['task-dates']}>
+                <span ><CiCalendar /></span>
+                <p>
+                  {new Date(task.assignedDate).toLocaleDateString()} -{' '}
+                  {new Date(task.dueDate).toLocaleDateString()}
+                </p>
+              </div>
+              <div className={Style['task-assignee']}>
+                <div className={Style['avatar']}>
+                  <p className={Style['UserInitial']}>{user.name.charAt(0).toUpperCase()}</p>
+                </div>
+                <p className={Style['name']}>{user.name}</p>
+              </div>
             </li>
           ))
         ) : (
           <p>No hay tareas asignadas.</p>
         )}
       </ul>
-    </div>
+      </div>
   );
 };
 
