@@ -3,6 +3,8 @@ import { useDispatch } from 'react-redux';
 import Papa from 'papaparse';
 import { setUsers } from '../store/slices/usersSlice';
 import { User } from '../store/slices/usersSlice'; 
+import Style from '../styles/FileUpload.module.css'
+
 const UploadCSV = () => {
   const dispatch = useDispatch();
 
@@ -30,20 +32,17 @@ const UploadCSV = () => {
   };
 
   return (
-    <div className="mb-8 text-center">
+    <div className={Style["file-upload-container"]}>
       <input
         type="file"
         accept=".csv"
         onChange={handleFileUpload}
-        className="hidden"
+        className={Style["file-input"]}
         id="upload"
       />
-      <label
-        htmlFor="upload"
-        className="bg-purple-100 text-purple-600 px-8 py-4 rounded-lg shadow-md flex justify-center items-center cursor-pointer"
-      >
+      <label htmlFor="upload" className={Style["file-label"]}>
         <span>Add CSV file</span>
-        <span className="ml-3 text-lg">📁</span>
+        <span className={Style["file-icon"]}>📁</span>
       </label>
     </div>
   );

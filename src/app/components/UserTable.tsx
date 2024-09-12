@@ -24,7 +24,7 @@ const UserTable = () => {
             </td>
             <td className="py-4">{user.role || "no rol"}</td>
 
-            <td className="py-4">{user.role || 'No role assigned'}</td>
+            <td className="py-4">{user.tasks.length || 0}</td>
 
             <td className="py-4 text-center">
               <input type="checkbox" className="h-5 w-5 text-green-600 rounded-md" />
