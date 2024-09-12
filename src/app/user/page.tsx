@@ -16,7 +16,7 @@ const tasks = useSelector((state: RootState) => state.tasks.tasks);
 const users = useSelector((state: RootState) => state.users.users);
 console.log('Tasks:', tasks);
 console.log('Users:', users);
-    const userId = 4;  // Simular un usuario autenticado
+    const userId = 2;  // Simular un usuario autenticado
     return (
         
         <div>
