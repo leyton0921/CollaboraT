@@ -8,26 +8,37 @@ import styles from '../styles/TaskManager.module.css';
 
 const TaskManager = () => {
   const dispatch = useDispatch();
+
+  // Obtener usuarios del store
   const users = useSelector((state: RootState) => state.users.users);
+
+
+
   const [taskTitle, setTaskTitle] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [dueDate, setDueDate] = useState<string>('');
   const [assignedDate] = useState<string>(new Date().toISOString().split('T')[0]);
-
   const handleAddTask = () => {
-    if (taskTitle && selectedUserId && dueDate) {
+    if (taskTitle && selectedUserId && dueDate ) {
       const newTask = {
         id: Date.now(),
         title: taskTitle,
         description: taskDescription,
         assignedUserId: selectedUserId,
         completed: false,
-        assignedDate,
-        dueDate,
+        assignedDate: new Date().toISOString(), 
+        dueDate, 
+        // idManager: loggedInUserId,
       };
+
+      // Agregar la tarea al store
       dispatch(addTask(newTask));
+
+      // Asignar la tarea al usuario seleccionado
       dispatch(assignTaskToUser({ userId: selectedUserId, task: newTask }));
+
+      // Limpiar los campos después de agregar la tarea
       setTaskTitle('');
       setTaskDescription('');
       setSelectedUserId(null);
@@ -68,7 +79,9 @@ const TaskManager = () => {
           <option key={user.id} value={user.id}>{user.name}</option>
         ))}
       </select>
-      <button onClick={handleAddTask} className={styles.button}>Add Task</button>
+      <button onClick={handleAddTask} className={styles.button}>
+        Add Task
+      </button>
     </div>
   );
 };
