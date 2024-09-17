@@ -1,10 +1,14 @@
-"use client";
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface Task {
+export interface Task {
   id: number;
   title: string;
-  assignedUserId?: number;
+  description: string;
+  assignedUserId: number;
+  completed: boolean;
+  assignedDate: string;
+  dueDate: string;
+  // idManager: number;
 }
 
 interface TasksState {
@@ -22,15 +26,14 @@ const tasksSlice = createSlice({
     addTask: (state, action: PayloadAction<Task>) => {
       state.tasks.push(action.payload);
     },
-    assignTask: (state, action: PayloadAction<{ taskId: number; userId: number }>) => {
-      const { taskId, userId } = action.payload;
-      const task = state.tasks.find(task => task.id === taskId);
+    markTaskCompleted(state, action: PayloadAction<number>) {
+      const task = state.tasks.find(task => task.id === action.payload);
       if (task) {
-        task.assignedUserId = userId;
+        task.completed = true;
       }
     },
   },
 });
 
-export const { addTask, assignTask } = tasksSlice.actions;
+export const { addTask, markTaskCompleted } = tasksSlice.actions;
 export default tasksSlice.reducer;
