@@ -1,14 +1,15 @@
 import Image from "next/image";
-import Navbar from "./UI/navbar/nav";
+//import Navbar from "./UI/navbar/nav";
 import Link from "next/link";
 
 export default function Home() {
   return (
-
-
-      <Link  href="\admin" >holaa</Link>
-
-     
- 
+    <div>
+      <h1>home page</h1>
+      <div>
+        <Link  href="\register">register</Link>
+        <Link  href="\login" >login</Link>
+      </div>
+    </div>
   );
 }
