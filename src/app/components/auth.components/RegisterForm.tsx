@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import styles from '../../auth/styles/register.module.css';
+import styles from '../../auth/styles/auth.module.css';
 import { registerUser } from '../../controllers/register.controller'; // Importar el controlador
 
 const RegisterForm = () => {
@@ -29,62 +29,60 @@ const RegisterForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className={styles.registerForm}>
-      <div className={styles.container}>
-      <div>
-        <label htmlFor="name" className={styles.label}>Name:</label>
-        <input
-        className={styles.input}
-          type="text"
-          id="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          aria-required="true"
-        />
+    <div className={styles.box}>
+      <div className={styles.registerTab}>
+        <div className={styles.col}>Register</div>
       </div>
-      <div>
-        <label htmlFor="email" className={styles.label}>Email:</label>
-        <input
-        className={styles.input}
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          aria-required="true"
-        />
-      </div>
-      <div>
-        <label htmlFor="password" className={styles.label}>Password:</label>
-        <input
-        className={styles.input}
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          aria-required="true"
-        />
-      </div>
-      <div>
-        <label htmlFor="nit" className={styles.label}>NIT:</label>
-        <input
-        className={styles.input}
-          type="text"
-          id="nit"
-          value={nit}
-          onChange={(e) => setNit(e.target.value)}
-          required
-          aria-required="true"
-        />
-      </div>
-      </div>
-      {error && <p className={styles.error}>{error}</p>}
-      {success && <p className={styles.success}>{success}</p>}
-      <button type="submit" className={styles.button}>Register</button>
-      
-    </form>
+      <form onSubmit={handleSubmit}>
+        <div className={styles.formGroup}>
+          <input
+            type="text"
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            placeholder=" "
+          />
+          <label htmlFor="name">Name:</label>
+        </div>
+        <div className={styles.formGroup}>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            placeholder=" "
+          />
+          <label htmlFor="email">Email:</label>
+        </div>
+        <div className={styles.formGroup}>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            placeholder=" "
+          />
+          <label htmlFor="password">Password:</label>
+        </div>
+        <div className={styles.formGroup}>
+          <input
+            type="text"
+            id="nit"
+            value={nit}
+            onChange={(e) => setNit(e.target.value)}
+            required
+            placeholder=" "
+          />
+          <label htmlFor="nit">NIT:</label>
+        </div>
+        {error && <p className={styles.error}>{error}</p>}
+        {success && <p className={styles.success}>{success}</p>}
+        <button type="submit" className={styles.btn}>Register</button>
+      </form>
+    </div>
   );
 };
 

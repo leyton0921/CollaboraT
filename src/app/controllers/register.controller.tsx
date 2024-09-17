@@ -13,7 +13,7 @@ export const registerUser = async (name: string, email: string, password: string
     console.log(data);
 
     if (response.ok) {
-      if ('token' in data && 'user' in data) {
+      if ('token' in data && 'name' in data) {
         const { user, token } = data as IAuthStateCompanies;
         localStorage.setItem('token', token);
         return { user, message: 'Registration successful' };

@@ -18,7 +18,7 @@ export const authenticateUser = async (email: string, password: string): Promise
     if (response.ok) {
       // Si la respuesta es exitosa, retorna el usuario y el token
       const { user, token } = data;
-      localStorage.setItem('user', user); //le quito el .name en el user azul
+      localStorage.setItem('name', user); //le quito el .name en el user azul
       return { user, token };
     } else {
       // Si la respuesta no es exitosa, retorna null
