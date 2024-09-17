@@ -11,6 +11,7 @@ export default function Home() {
       <div>
         <Link  href="\register">register</Link>
         <Link  href="\login" >login</Link>
+        <Link  href="\home" >home</Link>
         </div>
           </div>
   );
