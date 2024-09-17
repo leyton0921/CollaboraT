@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface Task {
+export interface Task {
   id: number;
   title: string;
   description: string;
@@ -8,6 +8,7 @@ interface Task {
   completed: boolean;
   assignedDate: string;
   dueDate: string;
+  // idManager: number;
 }
 
 interface TasksState {
@@ -25,14 +26,14 @@ const tasksSlice = createSlice({
     addTask: (state, action: PayloadAction<Task>) => {
       state.tasks.push(action.payload);
     },
-    updateTask: (state, action: PayloadAction<Task>) => {
-      const index = state.tasks.findIndex(task => task.id === action.payload.id);
-      if (index !== -1) {
-        state.tasks[index] = action.payload;
+    markTaskCompleted(state, action: PayloadAction<number>) {
+      const task = state.tasks.find(task => task.id === action.payload);
+      if (task) {
+        task.completed = true;
       }
     },
   },
 });
 
-export const { addTask, updateTask } = tasksSlice.actions;
+export const { addTask, markTaskCompleted } = tasksSlice.actions;
 export default tasksSlice.reducer;
