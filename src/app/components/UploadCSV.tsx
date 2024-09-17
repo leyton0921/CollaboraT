@@ -1,7 +1,9 @@
-"use client";
+'use client';
 import { useDispatch } from 'react-redux';
 import Papa from 'papaparse';
 import { setUsers } from '../store/slices/usersSlice';
+import { User } from '../store/slices/usersSlice'; 
+import Style from '../styles/FileUpload.module.css'
 
 const UploadCSV = () => {
   const dispatch = useDispatch();
@@ -11,32 +13,39 @@ const UploadCSV = () => {
     if (file) {
       Papa.parse(file, {
         header: true,
+        skipEmptyLines: true,
         complete: (result) => {
-          const users = result.data as any[];
+          const users: User[] = result.data.map((row: any) => ({
+            id: parseInt(row.id, 10),
+            name: row.name,
+            email: row.email,
+            role: row.role,
+            tasks: [], // Inicialmente vacío
+          }));
           dispatch(setUsers(users));
+        },
+        error: (error) => {
+          console.error('Error parsing CSV:', error);
         },
       });
     }
   };
 
   return (
-    <div className="mb-8 text-center">
-    <input
-      type="file"
-      accept=".csv"
-      onChange={handleFileUpload}
-      className="hidden"
-      id="upload"
-    />
-    <label
-      htmlFor="upload"
-      className="bg-purple-100 text-purple-600 px-8 py-4 rounded-lg shadow-md flex justify-center items-center cursor-pointer width-2"
-    >
-      <span>Add CSV file</span>
-      <span className="ml-3 text-lg">📁</span>
-    </label>
-  </div>
-);
+    <div className={Style["file-upload-container"]}>
+      <input
+        type="file"
+        accept=".csv"
+        onChange={handleFileUpload}
+        className={Style["file-input"]}
+        id="upload"
+      />
+      <label htmlFor="upload" className={Style["file-label"]}>
+        <span>Add CSV file</span>
+        <span className={Style["file-icon"]}>📁</span>
+      </label>
+    </div>
+  );
 };
 
 export default UploadCSV;
