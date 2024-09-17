@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import styles from '../../auth/styles/login.module.css';  
+import styles from '../../auth/styles/auth.module.css';  
 import { authenticateUser } from '../../controllers/login.controllers'; // Importar el controlador
 import Input from '../../components/ui.commponents/input';
 import Button from '../../components/ui.commponents/button';
@@ -24,7 +24,7 @@ const LoginForm = () => {
       const { user, token } = result;
       setMessage('Login successful');
       localStorage.setItem('token', token);
-      console.log('User:', user);
+      console.log('user:', user);
       router.push('/admin');
     } else {
       setError('Login failed: Invalid email or password');
@@ -32,31 +32,38 @@ const LoginForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className={styles.loginForm}>
-      <Input
-        label="Username:"
-        type="text"
-        id="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className={styles.input} placeholder={''}      />
-      <Input
-        label="Password:"
-        type="password"
-        id="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className={styles.input} placeholder={''}      />
-      {error && <p className={styles.error}>{error}</p>}
-      <Button
-        type="submit"
-        label="Login"
-        className={styles.button} 
-        onClick={function (): void {
-         console.log("Button clicked");
-        } }      />
-      {message && <p className={styles.message}>{message}</p>}
-    </form>
+    <div className={styles.box}>
+      <div className={styles.loginTab}>
+        <div className={styles.col}>Login</div>
+      </div>
+      <form onSubmit={handleSubmit}>
+        <div className={styles.formGroup}>
+          <input
+            type="text"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            placeholder=" "
+          />
+          <label htmlFor="email">Username:</label>
+        </div>
+        <div className={styles.formGroup}>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            placeholder=" "
+          />
+          <label htmlFor="password">Password:</label>
+        </div>
+        {error && <p className={styles.error}>{error}</p>}
+        <button type="submit" className={styles.btn}>Login</button>
+        {message && <p className={styles.success}>{message}</p>}
+      </form>
+    </div>
   );
 };
 
