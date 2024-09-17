@@ -1,15 +1,5 @@
-// src/store/slices/usersSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-interface Task {
-  id: number;
-  title: string;
-  description: string;
-  assignedUserId: number;
-  completed: boolean;
-  assignedDate: string;
-  dueDate: string;
-}
+import { Task }  from './tasksSlice';
 
 export interface User {
   id: number;
@@ -46,9 +36,17 @@ const usersSlice = createSlice({
         console.error('User not found:', userId);
       }
     },
+    updateUserTask(state, action: PayloadAction<Task>) {
+      const updatedTask = action.payload;
+      state.users.forEach(user => {
+        user.tasks = user.tasks.map(task => 
+          task.id === updatedTask.id ? updatedTask : task
+        );
+      });
+    },
   },
 });
 
 
-export const { setUsers, addUser, assignTaskToUser } = usersSlice.actions;
+export const { setUsers, addUser, assignTaskToUser,updateUserTask } = usersSlice.actions;
 export default usersSlice.reducer;

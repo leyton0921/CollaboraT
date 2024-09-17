@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 
 
 export default function Home() {
-  const [isAdmin, setIsAdmin] = useState(true);  // Cambiar a false para la vista de usuario
+  const [isAdmin, setIsAdmin] = useState(false);  // Cambiar a false para la vista de usuario
   const router = useRouter();
   const links = [
     { href: "/assignTasks", name: "assign tasks" },

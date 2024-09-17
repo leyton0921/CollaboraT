@@ -62,9 +62,9 @@
   color: #084298;
 }
 
-.task-status.todo {
-  background-color: #fff3cd;
-  color: #856404;
+.task-status.completed {
+  background-color: #cdffd8;
+  color: #388504;
 }
 
 /* Task description */
