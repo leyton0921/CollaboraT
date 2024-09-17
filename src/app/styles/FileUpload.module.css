@@ -1,6 +1,9 @@
 .file-upload-container {
     margin-bottom: 2rem;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   
   .file-input {
@@ -17,6 +20,8 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    width: 30%;
+    margin-top: 20px;
   }
   
   .file-label:hover {
