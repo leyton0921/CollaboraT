@@ -15,7 +15,7 @@ export default function AssignTasks() {
 
   useEffect(() => {
     if (!isAdmin) {
-      router.push('/user');  // Redirect to user view if not admin
+      router.push('/user'); 
     }
   }, [isAdmin, router]);
 
