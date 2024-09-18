@@ -1,0 +1,60 @@
+.container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.table th, .table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.table th {
+  background-color: #f4f4f4;
+}
+
+.avatar {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background-color: #c9c9c9;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 30px;
+  text-align: center;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.assignButton {
+  border: solid 1px #ddd;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.accions{
+  display: flex;
+  gap: 15px;
+}
+
+.assignButton:hover {
+  background-color: rgb(236, 234, 234)
+}
+
+.taskList {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin: 0;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
