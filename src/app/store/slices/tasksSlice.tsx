@@ -1,14 +1,21 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface Task {
-  id: number;
-  title: string;
-  description: string;
-  assignedUserId: number;
-  completed: boolean;
-  assignedDate: string;
-  dueDate: string;
-  // idManager: number;
+  id: string;  // UUID
+  name: string;  
+  description?: string; 
+  dueDate: string;  
+  startDate: string;  
+  priority: 'low' | 'medium' | 'high'; 
+  status: 'pending' | 'in progress' | 'completed';  
+  projectId: string;
+  collaboratorAssignedId: string; 
+  createdById: string;  
+  createdAt: string; 
+  updatedAt: string;  
+  deletedAt?: string;  
+  occupations?: string[];  
+  comments?: string[];  
 }
 
 interface TasksState {
@@ -26,10 +33,10 @@ const tasksSlice = createSlice({
     addTask: (state, action: PayloadAction<Task>) => {
       state.tasks.push(action.payload);
     },
-    markTaskCompleted(state, action: PayloadAction<number>) {
+    markTaskCompleted(state, action: PayloadAction<string>) {
       const task = state.tasks.find(task => task.id === action.payload);
       if (task) {
-        task.completed = true;
+        task.status = 'completed'; 
       }
     },
   },
