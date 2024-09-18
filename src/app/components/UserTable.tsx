@@ -1,11 +1,13 @@
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import styles from '../styles/UserTable.module.css';
+import { MdAssignmentAdd } from "react-icons/md";
+import { AiOutlineUserDelete } from "react-icons/ai";
+
 
 const UserTable = () => {
   const users = useSelector((state: RootState) => state.users.users);
-  console.log(users)
-
 
   return (
     <div className={styles.container}>
@@ -14,23 +16,31 @@ const UserTable = () => {
           <tr>
             <th>Name</th>
             <th>Role</th>
-            <th>Task Count</th>
-            <th>Assign Task</th>
+            <th>Tasks</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
           {users.map((user, index) => (
-            <tr key={index}>
-              <td className="flex items-center space-x-4 py-4 pl-4">
+            <tr key={index} className={styles.userRow}>
+              <td>
                 <span className={styles.avatar}>
                   {user.name.charAt(0).toUpperCase()}
                 </span>
-                <span>{user.name}</span>
+                {user.name}
               </td>
-              <td>{user.role || "no role"}</td>
-              <td className={styles.taskCount}>{user.tasks.length || 0}</td>
-              <td className="py-4 text-center">
-                <input type="checkbox" className={styles.checkbox} />
+              <td>{user.role || "No role"}</td>
+              <td>
+                <ul className={styles.taskList}>
+                  {user.tasks.map((task, taskIndex) => (
+                    <li key={taskIndex}>{}</li>
+                  ))}
+                </ul>
+              </td>
+              <td className={styles.accions}>
+                <button className={styles.assignButton}><MdAssignmentAdd /></button>
+                <button className={styles.assignButton}><AiOutlineUserDelete /></button>
+
               </td>
             </tr>
           ))}
