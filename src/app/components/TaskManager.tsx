@@ -1,50 +1,42 @@
-'use client';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../store/store';
-import { addTask } from '../store/slices/tasksSlice';
-import { assignTaskToUser } from '../store/slices/usersSlice';
-import { useState } from 'react';
+import React from 'react';
 import styles from '../styles/TaskManager.module.css';
+import FormTaskManagerProps from '../interface/tasks.interface';
 
-const TaskManager = () => {
-  const dispatch = useDispatch();
-  const users = useSelector((state: RootState) => state.users.users);
-  const [taskTitle, setTaskTitle] = useState('');
-  const [taskDescription, setTaskDescription] = useState('');
-  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
-  const [dueDate, setDueDate] = useState<string>('');
-  const [assignedDate] = useState<string>(new Date().toISOString().split('T')[0]);
-
-  const handleAddTask = () => {
-    if (taskTitle && selectedUserId && dueDate) {
-      const newTask = {
-        id: Date.now(),
-        title: taskTitle,
-        description: taskDescription,
-        assignedUserId: selectedUserId,
-        completed: false,
-        assignedDate,
-        dueDate,
-      };
-      dispatch(addTask(newTask));
-      dispatch(assignTaskToUser({ userId: selectedUserId, task: newTask }));
-      setTaskTitle('');
-      setTaskDescription('');
-      setSelectedUserId(null);
-      setDueDate('');
-    }
-  };
+const FormTaskManager: React.FC<FormTaskManagerProps> = ({
+  taskName,
+  setTaskName,
+  taskDescription,
+  setTaskDescription,
+  dueDate,
+  setDueDate,
+  taskPriority,
+  setTaskPriority,
+  selectedRole,
+  setSelectedRole,
+  status,
+  setStatus,
+  selectedUserId,
+  setSelectedUserId,
+  loading,
+  error,
+  handleAddTask,
+  users
+}) => {
 
   return (
     <div className={styles.container}>
       <h2>Assign Task</h2>
+      {loading && <p>Loading...</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
       <input
         type="text"
-        value={taskTitle}
+        value={taskName}
         placeholder="Task Title"
-        onChange={(e) => setTaskTitle(e.target.value)}
+        onChange={(e) => setTaskName(e.target.value)}
         className={styles.inputField}
       />
+
       <input
         type="text"
         value={taskDescription}
@@ -52,12 +44,14 @@ const TaskManager = () => {
         onChange={(e) => setTaskDescription(e.target.value)}
         className={styles.inputField}
       />
+
       <input
         type="date"
         value={dueDate}
         onChange={(e) => setDueDate(e.target.value)}
         className={styles.dateField}
       />
+
       <select
         onChange={(e) => setSelectedUserId(Number(e.target.value))}
         value={selectedUserId ?? ''}
@@ -68,9 +62,32 @@ const TaskManager = () => {
           <option key={user.id} value={user.id}>{user.name}</option>
         ))}
       </select>
-      <button onClick={handleAddTask} className={styles.button}>Add Task</button>
+
+      <select
+        onChange={(e) => setTaskPriority(e.target.value)}
+        value={taskPriority}
+        className={styles.selectField}
+      >
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
+
+      <select
+        onChange={(e) => setSelectedRole(e.target.value)}
+        value={selectedRole}
+        className={styles.selectField}
+      >
+        <option value="" disabled>Select role</option>
+        <option value="contador">Contador</option>
+
+      </select>
+
+      <button onClick={handleAddTask} className={styles.button}>
+        Add Task
+      </button>
     </div>
   );
 };
 
-export default TaskManager;
+export default FormTaskManager;
