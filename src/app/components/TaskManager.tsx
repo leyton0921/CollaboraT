@@ -12,50 +12,64 @@ const TaskManager = () => {
   // Obtener usuarios del store
   const users = useSelector((state: RootState) => state.users.users);
 
-
-
-  const [taskTitle, setTaskTitle] = useState('');
+  // Estados para los campos de la tarea
+  const [taskName, setTaskName] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [dueDate, setDueDate] = useState<string>('');
+  const [taskPriority, setTaskPriority] = useState<'low' | 'medium' | 'high'>('low');
+  const [status, setStatus] = useState<'pending' | 'in progress' | 'completed'>('pending');
   const [assignedDate] = useState<string>(new Date().toISOString().split('T')[0]);
+
   const handleAddTask = () => {
-    if (taskTitle && selectedUserId && dueDate ) {
-      const newTask = {
-        id: Date.now(),
-        title: taskTitle,
-        description: taskDescription,
-        assignedUserId: selectedUserId,
-        completed: false,
-        assignedDate: new Date().toISOString(), 
-        dueDate, 
-        // idManager: loggedInUserId,
-      };
-
-      // Agregar la tarea al store
-      dispatch(addTask(newTask));
-
-      // Asignar la tarea al usuario seleccionado
-      dispatch(assignTaskToUser({ userId: selectedUserId, task: newTask }));
-
-      // Limpiar los campos después de agregar la tarea
-      setTaskTitle('');
-      setTaskDescription('');
-      setSelectedUserId(null);
-      setDueDate('');
+    // Validaciones antes de crear la tarea
+    if (!taskName || !selectedUserId || !dueDate || !taskPriority) {
+      alert('Please fill all fields');
+      return;
     }
+
+    const newTask = {
+      id: Date.now().toString(),  // Generar un ID temporal 
+      name: taskName,
+      description: taskDescription || '',
+      dueDate,
+      startDate: new Date().toISOString(),
+      priority: taskPriority,
+      status: status,
+      projectId: 'dummy_project_id',
+      collaboratorAssignedId: selectedUserId.toString(),
+      createdById: 'current_user_id',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    // Agregar la tarea al store
+    dispatch(addTask(newTask));
+
+
+    dispatch(assignTaskToUser({ userId: selectedUserId, task: newTask }));
+
+    // Limpiar los campos después de agregar la tarea
+    setTaskName('');
+    setTaskDescription('');
+    setSelectedUserId(null);
+    setDueDate('');
+    setTaskPriority('low');
+    setStatus('pending');
   };
 
   return (
     <div className={styles.container}>
       <h2>Assign Task</h2>
+
       <input
         type="text"
-        value={taskTitle}
-        placeholder="Task Title"
-        onChange={(e) => setTaskTitle(e.target.value)}
+        value={taskName}
+        placeholder="Task Name"
+        onChange={(e) => setTaskName(e.target.value)}
         className={styles.inputField}
       />
+
       <input
         type="text"
         value={taskDescription}
@@ -63,14 +77,16 @@ const TaskManager = () => {
         onChange={(e) => setTaskDescription(e.target.value)}
         className={styles.inputField}
       />
+
       <input
         type="date"
         value={dueDate}
         onChange={(e) => setDueDate(e.target.value)}
         className={styles.dateField}
       />
+
       <select
-        onChange={(e) => setSelectedUserId(Number(e.target.value))}
+        onChange={(e) => setSelectedUserId(e.target.value ? Number(e.target.value) : null)}
         value={selectedUserId ?? ''}
         className={styles.selectField}
       >
@@ -79,6 +95,17 @@ const TaskManager = () => {
           <option key={user.id} value={user.id}>{user.name}</option>
         ))}
       </select>
+
+      <select
+        onChange={(e) => setTaskPriority(e.target.value as 'low' | 'medium' | 'high')}
+        value={taskPriority}
+        className={styles.selectField}
+      >
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
+
       <button onClick={handleAddTask} className={styles.button}>
         Add Task
       </button>
