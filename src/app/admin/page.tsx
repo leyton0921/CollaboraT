@@ -1,6 +1,6 @@
 "use client"
 import UploadCSV from '../components/UploadCSV';
-import TaskManager from '../components/TaskManager';
+import TaskManager from '../controllers/task.controller';
 
 
 import UserTable from '../components/UserTable';
