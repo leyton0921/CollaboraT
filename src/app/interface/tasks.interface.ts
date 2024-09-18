@@ -19,4 +19,5 @@ export default interface FormTaskManagerProps {
     error: string | null;
     handleAddTask: () => void;
     users: { id: number; name: string }[]; 
+    onClose?: () => void;  
   }
