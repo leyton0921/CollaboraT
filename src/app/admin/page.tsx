@@ -7,6 +7,7 @@ import UserTable from '../components/UserTable';
 import { useState, useEffect } from 'react';
 import { Navbar } from '../UI/navbar';
 import { useRouter } from 'next/navigation';
+import Spinner from '../UI/Spiner/spiner';
 
 
 export default function Home() {
@@ -19,23 +20,22 @@ export default function Home() {
 
   useEffect(() => {
     if (!isAdmin) {
-      router.push('/user');  
+      router.push('/user');
     }
   }, [isAdmin, router]);
 
   if (!isAdmin) {
-    return <p>Redirecting...</p>;
+    return <Spinner/>
   }
 
   return (
     <div>
-    
-        <Navbar  links={links}/>
-          <UploadCSV />
-          <UserTable />
-          <TaskManager/>
-        
-    
+
+      <Navbar links={links} />
+      <UploadCSV />
+      <UserTable />
+
+
     </div>
   );
 }
