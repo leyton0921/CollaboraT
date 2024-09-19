@@ -7,10 +7,14 @@ import UserTable from '../components/UserTable';
 import { useState, useEffect } from 'react';
 import { Navbar } from '../UI/navbar';
 import { useRouter } from 'next/navigation';
+
+import withAdminGuard from '../auth/guard/authcontext';
+
 import Spinner from '../UI/Spiner/spiner';
 
 
-export default function Home() {
+
+  function Home() {
   const [isAdmin, setIsAdmin] = useState(true);  // Cambiar a false para la vista de usuario
   const router = useRouter();
   const links = [
@@ -31,11 +35,12 @@ export default function Home() {
   return (
     <div>
 
+
       <Navbar links={links} />
       <UploadCSV />
       <UserTable />
 
-
     </div>
   );
 }
+export default withAdminGuard(Home);

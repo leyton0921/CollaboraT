@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '../../auth/styles/auth.module.css';  
 import { authenticateUser } from '../../controllers/login.controllers'; // Importar el controlador
@@ -10,21 +10,27 @@ const LoginForm = () => {
   const [password, setPassword] = useState('');
   const [welcomeMessage, setWelcomeMessage] = useState<string | null>(null); // Mensaje de bienvenida
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false); // Estado de carga
   const router = useRouter(); 
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setWelcomeMessage(null); // Reiniciar el mensaje de bienvenida
     setError(null);
+    setLoading(false); // Reiniciar estado de carga
 
     const result = await authenticateUser(email, password);
 
     if (result) {
       const { user, token } = result;
-      setWelcomeMessage(`Hola de nuevo, ${user.name}!`); // Mensaje de bienvenida
+      setWelcomeMessage(`hello welcome to collaborat, ${user.name}!`); 
       localStorage.setItem('token', token);
       console.log('user:', user);
-      setTimeout(() => router.push('/admin'), 3000); // Redirigir después de 3 segundos
+      setLoading(true); // Activar la carga
+
+      setTimeout(() => {
+        router.push('/admin');
+      }, 3000); // Redirigir después de 3 segundos
     } else {
       setError('Login failed: Invalid email or password');
     }
@@ -78,8 +84,31 @@ const LoginForm = () => {
           </div>
         )}
         {error && <p className={styles.error}>{error}</p>}
-        {welcomeMessage && <p className={styles.success}>{welcomeMessage}</p>} {/* Mensaje de bienvenida */}
+        {loading && (
+          <div className={styles.loadingContainer}>
+            <p>{welcomeMessage}</p>
+            <div className={styles.loadingBar} />
+          </div>
+        )}
       </form>
+      <style jsx>{`
+        .loadingContainer {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          margin-top: 20px;
+        }
+        .loadingBar {
+          width: 100%;
+          height: 5px;
+          background-color: #0070f3;
+          animation: loadingAnimation 3s linear forwards;
+        }
+        @keyframes loadingAnimation {
+          0% { width: 0; }
+          100% { width: 100%; }
+        }
+      `}</style>
     </div>
   );
 };
