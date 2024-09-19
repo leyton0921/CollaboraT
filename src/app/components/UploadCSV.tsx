@@ -1,16 +1,19 @@
 'use client';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Papa from 'papaparse';
 import { setUsers } from '../store/slices/usersSlice';
-import { User } from '../store/slices/usersSlice'; 
-import Style from '../styles/FileUpload.module.css'
+import { User } from '../store/slices/usersSlice';
+import Style from '../styles/FileUpload.module.css';
 
 const UploadCSV = () => {
   const dispatch = useDispatch();
+  const [fileName, setFileName] = useState('No file chosen');
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      setFileName(file.name);
       Papa.parse(file, {
         header: true,
         skipEmptyLines: true,
@@ -32,18 +35,24 @@ const UploadCSV = () => {
   };
 
   return (
-    <div className={Style["file-upload-container"]}>
-      <input
-        type="file"
-        accept=".csv"
-        onChange={handleFileUpload}
-        className={Style["file-input"]}
-        id="upload"
-      />
-      <label htmlFor="upload" className={Style["file-label"]}>
-        <span>Add CSV file</span>
-        <span className={Style["file-icon"]}>📁</span>
-      </label>
+    <div>
+      <div className={Style["content-tittle"]}>
+        <h1>Task Assignment Dashboard</h1>
+      </div>
+      <div className={Style["file-upload-container"]}>
+        <label htmlFor="upload" className={Style["uploadButton"]}>
+          <span className={Style["icon"]}>📁</span> Upload
+        </label>
+        <input
+          type="file"
+          accept=".csv"
+          onChange={handleFileUpload}
+          className={Style["inputField"]}
+          id="upload"
+        />
+        <span className={Style["fileName"]}>{fileName}</span>
+        <button className={Style["uploadButton"]}>Descargar</button>
+      </div>
     </div>
   );
 };

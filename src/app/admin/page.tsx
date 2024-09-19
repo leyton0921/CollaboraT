@@ -1,13 +1,17 @@
 "use client"
 import UploadCSV from '../components/UploadCSV';
-import TaskManager from '../components/TaskManager';
+import TaskManager from '../controllers/task.controller';
 
 
 import UserTable from '../components/UserTable';
 import { useState, useEffect } from 'react';
 import { Navbar } from '../UI/navbar';
 import { useRouter } from 'next/navigation';
+
 import withAdminGuard from '../auth/guard/authcontext';
+
+import Spinner from '../UI/Spiner/spiner';
+
 
 
   function Home() {
@@ -20,21 +24,22 @@ import withAdminGuard from '../auth/guard/authcontext';
 
   useEffect(() => {
     if (!isAdmin) {
-      router.push('/user');  
+      router.push('/user');
     }
   }, [isAdmin, router]);
 
   if (!isAdmin) {
-    return <p>Redirecting...</p>;
+    return <Spinner/>
   }
 
   return (
     <div>
 
-        <Navbar  links={links}/>
-          <UploadCSV />
-          <UserTable />
-          <TaskManager/>
+
+      <Navbar links={links} />
+      <UploadCSV />
+      <UserTable />
+
     </div>
   );
 }

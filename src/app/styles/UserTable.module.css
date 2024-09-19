@@ -1,51 +1,60 @@
-/* UserTable.module.css */
+@import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 .container {
-    background-color: #f3e8ff; /* bg-purple-50 */
-    padding: 1rem; /* p-4 */
-    border-radius: 0.5rem; /* rounded-lg */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
-  }
-  
-  .table {
-    width: 100%; /* w-full */
-    table-layout: auto; /* table-auto */
-  }
-  
-  .table th,
-  .table td {
-    padding: 0.5rem; /* py-2 */
-    text-align: left; /* text-left */
-  }
-  
-  .table th {
-    padding-left: 1rem; /* pl-4 */
-  }
-  
-  .table tbody tr {
-    background-color: #ffffff; /* bg-white */
-    border-bottom: 1px solid #e5e7eb; /* border-b */
-  }
-  
-  .avatar {
-    height: 2rem; /* h-8 */
-    width: 2rem; /* w-8 */
-    background-color: #d6bcfa; /* bg-purple-300 */
-    border-radius: 50%; /* rounded-full */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ffffff; /* text-white */
-    font-weight: bold; /* font-bold */
-  }
-  
-  .checkbox {
-    height: 1.25rem; /* h-5 */
-    width: 1.25rem; /* w-5 */
-    color: #10b981; /* text-green-600 */
-    border-radius: 0.375rem; /* rounded-md */
-  }
-  
-  .task-count {
-    text-align: center; /* text-center */
-  }
-  
+  padding: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.table th, .table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.table th {
+  background-color: #f4f4f4;
+}
+
+.avatar {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background-color: #c9c9c9;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 30px;
+  text-align: center;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.assignButton {
+  border: solid 1px #ddd;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.actions{
+  display: flex;
+  gap: 15px;
+}
+
+.assignButton:hover {
+  background-color: rgb(236, 234, 234)
+}
+
+.taskList {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin: 0;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
