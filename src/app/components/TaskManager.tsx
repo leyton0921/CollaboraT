@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from '../styles/TaskManager.module.css';
-import FormTaskManagerProps from '../interface/tasks.interface';
+import FormTaskManagerProps from '../interface/formTask.interface'
 import { IoIosCloseCircleOutline } from "react-icons/io";
 
 const FormTaskManager: React.FC<FormTaskManagerProps> = ({
@@ -22,7 +22,7 @@ const FormTaskManager: React.FC<FormTaskManagerProps> = ({
   error,
   handleAddTask,
   users,
-  onClose 
+  onClose
 }) => {
   return (
     <div className={styles.modal}>
@@ -62,7 +62,7 @@ const FormTaskManager: React.FC<FormTaskManagerProps> = ({
           ))}
         </select>
         <select
-          onChange={(e) => setTaskPriority(e.target.value)}
+          onChange={(e) => setTaskPriority(e.target.value as 'low' | 'medium' | 'high')}
           value={taskPriority}
           className={styles.selectField}
         >
@@ -70,6 +70,7 @@ const FormTaskManager: React.FC<FormTaskManagerProps> = ({
           <option value="medium">Medium</option>
           <option value="high">High</option>
         </select>
+
         <select
           onChange={(e) => setSelectedRole(e.target.value)}
           value={selectedRole}
