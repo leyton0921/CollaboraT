@@ -1,5 +1,5 @@
 // app/layout.tsx
-import './globals.css';
+import './globals.jsx';
 import { ReduxProvider } from './components/ReduxProvider';
 import type { Metadata } from 'next';
 
