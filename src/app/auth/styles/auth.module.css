@@ -1,0 +1,121 @@
+/* Estilos para la caja del formulario */
+.box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  padding: 40px;
+  transform: translate(-50%, -50%);
+  border: #ccc solid 2px;
+  background: #ececec;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+
+/* Estilos para las pestañas de login y registro */
+.loginTab,
+.registerTab {
+  position: relative;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 10px;
+}
+
+/* Estilos para los campos del formulario */
+.formGroup {
+  position: relative;
+  margin-bottom: 30px; /* Espaciado entre campos */
+}
+
+/* Estilos para los inputs */
+.formGroup input {
+  width: 100%;
+  padding: 10px 0;
+  font-size: 15px;
+  padding-left: 15px;
+  padding-top: 15px;
+  color: #ccc;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  outline: none;
+  background: transparent;
+}
+
+/* Estilos para el autofill */
+.formGroup input:-webkit-autofill,
+.formGroup input:-webkit-autofill:hover,
+.formGroup input:-webkit-autofill:focus {
+  border: none;
+  border-bottom: 1px solid #03a9f4;
+  -webkit-text-fill-color: #ccc;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Estilos para las etiquetas */
+.formGroup label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 10px 10px;
+  font-size: 15px;
+  color: #ccc;
+  pointer-events: none;
+  transition: 0.5s;
+}
+
+/* Estilos para etiquetas al enfocar el input */
+.formGroup input:focus ~ label,
+.formGroup input:valid ~ label {
+  top: -20px;
+  left: 0;
+  color: #000000;
+  font-size: 13px;
+}
+
+/* Estilos para los botones */
+.btn {
+  display: flex;
+  width: 40%;
+  height: 40px;
+  border: #ccc solid 1px;
+  background: none;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
+  align-items: center; /* Centrar texto verticalmente */
+  justify-content: center; /* Centrar texto horizontalmente */
+  margin-top: 10px; /* Espaciado entre botones y campos */
+}
+
+.btn:hover {
+  background: #0056b3;
+}
+
+/* Estilos para los mensajes de error y éxito */
+.error {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 14px;
+  color: #ff4d4d;
+}
+
+.success {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 14px;
+  color: #4caf50;
+}
+
+/* Estilos para los botones de navegación */
+.btn + .btn {
+  margin-left: 10px; /* Espaciado entre los botones de navegación */
+}
+
+/* Estilos para el formulario */
+.form {
+  display: flex;
+  flex-direction: column; /* Asegurar que los campos se apilen verticalmente */
+}

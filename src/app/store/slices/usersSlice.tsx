@@ -1,24 +1,13 @@
-"use client";
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Task }  from './tasksSlice';
 
-// Definición de la estructura de una tarea
-interface Task {
-  id: number;
-  title: string;
-  description: string;
-  assignedUserId: number;
-  completed: boolean;
-}
-
-// Definición de la estructura de un usuario
-interface User {
+export interface User {
   id: number;
   name: string;
-  rol: string;
-  tasks: Task[]; // Tareas asignadas a este usuario
+  role: string;
+  tasks: Task[]; 
 }
 
-// Definición del estado inicial
 interface UsersState {
   users: User[];
 }
@@ -41,11 +30,23 @@ const usersSlice = createSlice({
       const { userId, task } = action.payload;
       const user = state.users.find((user) => user.id === userId);
       if (user) {
-        user.tasks.push(task); // Añade la tarea al usuario
+        user.tasks = user.tasks || [];
+        user.tasks.push(task);
+      } else {
+        console.error('User not found:', userId);
       }
+    },
+    updateUserTask(state, action: PayloadAction<Task>) {
+      const updatedTask = action.payload;
+      state.users.forEach(user => {
+        user.tasks = user.tasks.map(task => 
+          task.id === updatedTask.id ? updatedTask : task
+        );
+      });
     },
   },
 });
 
-export const { setUsers, addUser, assignTaskToUser } = usersSlice.actions;
+
+export const { setUsers, addUser, assignTaskToUser,updateUserTask } = usersSlice.actions;
 export default usersSlice.reducer;

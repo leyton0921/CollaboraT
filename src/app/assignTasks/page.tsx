@@ -1,41 +1,32 @@
-"use client"
-import UploadCSV from '../components/UploadCSV';
-import TaskManager from '../controllers/task.controller';
-
-
-import UserTable from '../components/UserTable';
+'use client'
+import TaskManager from '../components/TaskManager';
 import { useState, useEffect } from 'react';
 import { Navbar } from '../UI/navbar';
 import { useRouter } from 'next/navigation';
-import Spinner from '../UI/Spiner/spiner';
 
-
-export default function Home() {
+export default function AssignTasks() {
   const [isAdmin, setIsAdmin] = useState(true);  // Cambiar a false para la vista de usuario
   const router = useRouter();
+  
   const links = [
-    { href: "/assignTasks", name: "assign tasks" },
-    { href: "/admin", name: "Home Admnin" }
+    { href: "/assignTask", name: "Assign Tasks" },
+    { href: "/admin", name: "Home Admin" }  
   ];
 
   useEffect(() => {
     if (!isAdmin) {
-      router.push('/user');
+      router.push('/user'); 
     }
   }, [isAdmin, router]);
 
   if (!isAdmin) {
-    return <Spinner/>
+    return <p>Redirecting...</p>;
   }
 
   return (
     <div>
-
       <Navbar links={links} />
-      <UploadCSV />
-      <UserTable />
-
-
+      <TaskManager />
     </div>
   );
 }

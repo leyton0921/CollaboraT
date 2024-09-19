@@ -1,35 +1,113 @@
-/* UserTasks.module.css */
+/* General container */
+.tasks-container {
+  background-color: #f3f4f6;
+  min-height: 100vh;
+  padding:  0 2.5rem;
 
-.tasksContainer {
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  
-  .tasksHeader {
-    font-size: 24px;
-    color: #333;
-    margin-bottom: 16px;
-    text-align: center;
-  }
-  
-  .taskList {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .taskItem {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    font-size: 18px;
-    color: #555;
-  }
-  
-  .taskItem:last-child {
-    border-bottom: none;
-  }
-  
+}
+
+/* Title */
+.tasks-title {
+  font-size: 1.75rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+
+/* List of tasks */
+.list{
+  display:inline-block;
+  list-style-type: none;
+  padding: 0;
+  margin: 0 ;
+  width:  100%;
+
+}
+
+.task-item {
+  background-color: white;
+  display: inline-block;
+  margin: 20px;
+  width: 42%;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Task header: Title and status */
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Task title */
+.task-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* Task status */
+.task-status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Status colors */
+.task-status.in-progress {
+  background-color: #cfe2ff;
+  color: #084298;
+}
+
+.task-status.completed {
+  background-color: #cdffd8;
+  color: #388504;
+}
+
+/* Task description */
+.task-description {
+  text-align: start;
+  color: #6b7280;
+  margin-top: 0.5rem;
+}
+
+/* Task dates */
+.task-dates {
+  display: flex;
+  align-items: center;
+  color: #6b7280;
+  margin-top: 0.5rem;
+}
+
+.task-dates .icon {
+  margin-right: 0.5rem;
+}
+
+/* Task assignee */
+.task-assignee {
+  display: flex;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.task-assignee .avatar {
+  width: 1.2rem;
+  height: 1.2em;
+  background-color: #d1d5db;
+  border-radius: 50%;
+  margin-right: 0.75rem;
+}
+.UserInitial{
+  font-size: 12px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.task-assignee .name {
+  font-size: 15px;
+  font-weight: 500;
+  color: #374151;
+}

@@ -1,39 +1,117 @@
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
+import styles from '../styles/UserTable.module.css';
+import { MdAssignmentAdd } from "react-icons/md";
+import { AiOutlineUserDelete } from "react-icons/ai";
+import FormTaskManager from './TaskManager'; 
+import { User } from '../interface/user.interface';
 
 const UserTable = () => {
   const users = useSelector((state: RootState) => state.users.users);
-  console.log(users)
+  const [showForm, setShowForm] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [taskName, setTaskName] = useState('');
+  const [taskDescription, setTaskDescription] = useState('');
+  const [dueDate, setDueDate] = useState('');
+  const [taskPriority, setTaskPriority] = useState('low');
+  const [selectedRole, setSelectedRole] = useState('');
+  const [status, setStatus] = useState('');
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [loading, setLoading] = useState(false); // Manejo del estado de carga
+  const [error, setError] = useState('');
+
+  const handleAddTask = () => {
+    // Implementa tu lógica para agregar una tarea aquí
+    console.log('Tarea añadida:', {
+      taskName,
+      taskDescription,
+      dueDate,
+      taskPriority,
+      selectedRole,
+      selectedUserId
+    });
+    handleCloseForm(); // Cierra el formulario después de agregar la tarea
+  };
+
+  const handleAssignTaskClick = (user: User) => {
+    setSelectedUser(user);
+    setSelectedUserId(user.id);
+    setShowForm(true);
+  };
+
+  const handleCloseForm = () => {
+    setShowForm(false);
+    setSelectedUser(null);
+  };
 
   return (
-    <div className="bg-purple-50 p-4 rounded-lg shadow-md">
-    <table className="w-full table-auto">
-      <thead>
-        <tr className="text-left">
-          <th className="py-2 pl-4">Name</th>
-          <th className="py-2">rol</th>
-          <th className="py-2">Assign Task</th>
-        </tr>
-      </thead>
-      <tbody>
-        {users.map((user, index) => (
-          <tr key={index} className="bg-white border-b">
-            <td className="flex items-center space-x-4 py-4 pl-4">
-              <span className="h-8 w-8 bg-purple-300 rounded-full flex items-center justify-center text-white font-bold">{user.name.charAt(0).toUpperCase()}</span>
-              <span>{user.name}</span>
-            </td>
-            <td className="py-4">{user.rol || "no rol"}</td>
-
-            <td className="py-4">{user.rol || 'No role assigned'}</td>
-
-            <td className="py-4 text-center">
-              <input type="checkbox" className="h-5 w-5 text-green-600 rounded-md" />
-            </td>
+    <div className={styles.container}>
+      {showForm && selectedUser && (
+        <FormTaskManager
+          taskName={taskName}
+          setTaskName={setTaskName}
+          taskDescription={taskDescription}
+          setTaskDescription={setTaskDescription}
+          dueDate={dueDate}
+          setDueDate={setDueDate}
+          taskPriority={taskPriority}
+          setTaskPriority={setTaskPriority}
+          selectedRole={selectedRole}
+          setSelectedRole={setSelectedRole}
+          status={status}
+          setStatus={setStatus}
+          selectedUserId={selectedUserId}
+          setSelectedUserId={setSelectedUserId}
+          loading={loading}
+          error={error}
+          handleAddTask={handleAddTask}
+          users={users}
+          onClose={handleCloseForm}
+        />
+      )}
+      <table className={styles.table}>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Tasks</th>
+            <th>Action</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
+        </thead>
+        <tbody>
+          {users.map((user, index) => (
+            <tr key={index} className={styles.userRow}>
+              <td>
+                <span className={styles.avatar}>
+                  {user.name.charAt(0).toUpperCase()}
+                </span>
+                {user.name}
+              </td>
+              <td>{user.role || "No role"}</td>
+              <td>
+                <ul className={styles.taskList}>
+                  {user.tasks.map((task, taskIndex) => (
+                    <li key={taskIndex}>{task.name}</li>
+                  ))}
+                </ul>
+              </td>
+              <td className={styles.actions}>
+                <button
+                  className={styles.assignButton}
+                  onClick={() => handleAssignTaskClick(user)}
+                >
+                  <MdAssignmentAdd />
+                </button>
+                <button className={styles.assignButton}>
+                  <AiOutlineUserDelete />
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

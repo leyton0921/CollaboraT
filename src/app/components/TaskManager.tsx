@@ -1,55 +1,90 @@
-"use client";
-import { useDispatch, useSelector } from 'react-redux';
-import { useState } from 'react';
-import { RootState } from '../store/store';
-import { addTask } from '../store/slices/tasksSlice';
-import { assignTaskToUser } from '../store/slices/usersSlice'; // Asegúrate de importar la acción correcta
+import React from 'react';
+import styles from '../styles/TaskManager.module.css';
+import FormTaskManagerProps from '../interface/formTask.interface'
+import { IoIosCloseCircleOutline } from "react-icons/io";
 
-const TaskManager = () => {
-  const dispatch = useDispatch();
-  const users = useSelector((state: RootState) => state.users.users);
-  const [taskTitle, setTaskTitle] = useState('');
-  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
-
-  const handleAddTask = () => {
-    if (taskTitle && selectedUserId !== null) {
-      const newTask = {
-        id: Date.now(), // Utilizamos Date.now() para generar un ID único
-        title: taskTitle,
-        description: '', // Puedes agregar una descripción si es necesario
-        assignedUserId: selectedUserId,
-        completed: false, // Estado inicial de la tarea
-      };
-
-      dispatch(addTask(newTask)); // Agrega la tarea al estado global
-      dispatch(assignTaskToUser({ userId: selectedUserId, task: newTask })); // Asigna la tarea al usuario específico
-
-      setTaskTitle('');
-      setSelectedUserId(null);
-    }
-  };
-
+const FormTaskManager: React.FC<FormTaskManagerProps> = ({
+  taskName,
+  setTaskName,
+  taskDescription,
+  setTaskDescription,
+  dueDate,
+  setDueDate,
+  taskPriority,
+  setTaskPriority,
+  selectedRole,
+  setSelectedRole,
+  status,
+  setStatus,
+  selectedUserId,
+  setSelectedUserId,
+  loading,
+  error,
+  handleAddTask,
+  users,
+  onClose
+}) => {
   return (
-    <div>
-      <h2>Assign Task</h2>
-      <input
-        type="text"
-        value={taskTitle}
-        placeholder="Task Title"
-        onChange={(e) => setTaskTitle(e.target.value)}
-      />
-      <select
-        onChange={(e) => setSelectedUserId(Number(e.target.value))}
-        value={selectedUserId ?? ''}
-      >
-        <option value="" disabled>Select a user</option>
-        {users.map((user) => (
-          <option key={user.id} value={user.id}>{user.name}</option>
-        ))}
-      </select>
-      <button onClick={handleAddTask}>Add Task</button>
+    <div className={styles.modal}>
+      <div className={styles.container}>
+        <button className={styles.closeButton} onClick={onClose}><IoIosCloseCircleOutline /></button>
+        <h2>Assign Task</h2>
+        {loading && <p>Loading...</p>}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <input
+          type="text"
+          value={taskName}
+          placeholder="Task Title"
+          onChange={(e) => setTaskName(e.target.value)}
+          className={styles.inputField}
+        />
+        <input
+          type="text"
+          value={taskDescription}
+          placeholder="Task Description"
+          onChange={(e) => setTaskDescription(e.target.value)}
+          className={styles.inputField}
+        />
+        <input
+          type="date"
+          value={dueDate}
+          onChange={(e) => setDueDate(e.target.value)}
+          className={styles.dateField}
+        />
+        <select
+          onChange={(e) => setSelectedUserId(Number(e.target.value))}
+          value={selectedUserId ?? ''}
+          className={styles.selectField}
+        >
+          <option value="" disabled>Select a user</option>
+          {users.map((user) => (
+            <option key={user.id} value={user.id}>{user.name}</option>
+          ))}
+        </select>
+        <select
+          onChange={(e) => setTaskPriority(e.target.value as 'low' | 'medium' | 'high')}
+          value={taskPriority}
+          className={styles.selectField}
+        >
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+
+        <select
+          onChange={(e) => setSelectedRole(e.target.value)}
+          value={selectedRole}
+          className={styles.selectField}
+        >
+          <option value="" disabled>Select role</option>
+          <option value="contador">Contador</option>
+        </select>
+        <button onClick={handleAddTask} className={styles.button}>
+          Add Task
+        </button>
+      </div>
     </div>
   );
 };
 
-export default TaskManager;
+export default FormTaskManager;

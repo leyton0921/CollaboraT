@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+.container {
+  padding: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.table th, .table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.table th {
+  background-color: #f4f4f4;
+}
+
+.avatar {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background-color: #c9c9c9;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 30px;
+  text-align: center;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.assignButton {
+  border: solid 1px #ddd;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.actions{
+  display: flex;
+  gap: 15px;
+}
+
+.assignButton:hover {
+  background-color: rgb(236, 234, 234)
+}
+
+.taskList {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin: 0;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
