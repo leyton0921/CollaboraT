@@ -1,43 +1,39 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import styles from '../../auth/styles/auth.module.css';  
-import { authenticateUser } from '../../controllers/login.controllers'; // Importar el controlador
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation'; 
+import { authenticateUser } from '../../controllers/login.controllers'; 
+import styled, { keyframes } from 'styled-components';
 
 const LoginForm = () => {
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [welcomeMessage, setWelcomeMessage] = useState<string | null>(null); // Mensaje de bienvenida
+  const [welcomeMessage, setWelcomeMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false); // Estado de carga
+  const [loading, setLoading] = useState(false);
   const router = useRouter(); 
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setWelcomeMessage(null); // Reiniciar el mensaje de bienvenida
+    setWelcomeMessage(null);
     setError(null);
-    setLoading(false); // Reiniciar estado de carga
+    setLoading(true);
 
     const result = await authenticateUser(email, password);
 
     if (result) {
       const { user, token } = result;
-      setWelcomeMessage(`hello welcome to collaborat, ${user.name}!`); 
+      setWelcomeMessage(`Hello, welcome to Collaborat, ${user.name}!`); 
       localStorage.setItem('token', token);
       console.log('user:', user);
-      setLoading(true); // Activar la carga
-
+      
       setTimeout(() => {
         router.push('/admin');
-      }, 3000); // Redirigir después de 3 segundos
+      }, 3000);
     } else {
       setError('Login failed: Invalid email or password');
+      setLoading(false);
     }
-  };
-
-  const handleRegisterRedirect = () => {
-    router.push('/register'); // Cambia la ruta según sea necesario
   };
 
   const nextStep = () => {
@@ -48,69 +44,201 @@ const LoginForm = () => {
     setStep((prevStep) => Math.max(prevStep - 1, 1));
   };
 
+  const handleRegisterRedirect = () => {
+    router.push('/register');
+  };
+
   return (
-    <div className={styles.box}>
-      <div className={styles.loginTab}>
-        <div className={styles.col}>Login</div>
-      </div>
-      <form onSubmit={handleSubmit}>
-        {step === 1 && (
-          <div className={styles.formGroup}>
-            <input
-              type="text"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              placeholder=" "
-            />
-            <label htmlFor="email">Username:</label>
-            <button type="button" onClick={nextStep} className={styles.btn}>Next</button>
-          </div>
-        )}
-        {step === 2 && (
-          <div className={styles.formGroup}>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              placeholder=" "
-            />
-            <label htmlFor="password">Password:</label>
-            <button type="button" onClick={prevStep} className={styles.btn}>Back</button>
-            <button type="submit" className={styles.btn}>Login</button>
-          </div>
-        )}
-        {error && <p className={styles.error}>{error}</p>}
-        {loading && (
-          <div className={styles.loadingContainer}>
-            <p>{welcomeMessage}</p>
-            <div className={styles.loadingBar} />
-          </div>
-        )}
-      </form>
-      <style jsx>{`
-        .loadingContainer {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          margin-top: 20px;
-        }
-        .loadingBar {
-          width: 100%;
-          height: 5px;
-          background-color: #0070f3;
-          animation: loadingAnimation 3s linear forwards;
-        }
-        @keyframes loadingAnimation {
-          0% { width: 0; }
-          100% { width: 100%; }
-        }
-      `}</style>
-    </div>
+    <Background>
+      <Wrapper>
+        <Box>
+          <LoginTab>
+            <Col>Hola, bienvenido a Collaborat</Col>
+          </LoginTab>
+          <form onSubmit={handleSubmit}>
+            {welcomeMessage && <WelcomeMessage>{welcomeMessage}</WelcomeMessage>}
+            {step === 1 && (
+              <FormGroup>
+                <Input
+                  type="text"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  placeholder=" "
+                />
+                <Label htmlFor="email">Usuario:</Label>
+                <Button type="button" onClick={nextStep}>Siguiente</Button>
+              </FormGroup>
+            )}
+            {step === 2 && (
+              <FormGroup>
+                <Input
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  placeholder=" "
+                />
+                <Label htmlFor="password">Contraseña:</Label>
+                <ButtonGroup>
+                  <Button type="button" onClick={prevStep}>Atras</Button>
+                  <Button type="submit">Entrar</Button>
+                </ButtonGroup>
+              </FormGroup>
+            )}
+            {error && <ErrorMessage>{error}</ErrorMessage>}
+            {loading && (
+              <LoadingContainer>
+                <LoadingSpinner />
+              </LoadingContainer>
+            )}
+            <RegisterLink onClick={handleRegisterRedirect}>
+              Si es una empresa, regístrese
+            </RegisterLink>
+          </form>
+        </Box>
+      </Wrapper>
+    </Background>
   );
 };
+
+// Styled Components
+const softGreenColor = '#00c767';
+const lighterGreenColor = '#00e080';
+
+const Background = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.301) url('/fondo collaborat.png') no-repeat center center;
+  background-size: cover;
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 20px;
+  font-family: 'Segoe UI', 'Arial', sans-serif; 
+`;
+
+const WelcomeMessage = styled.h1`
+  font-size: 24px;
+  font-weight: bold;
+  color: ${softGreenColor};
+  margin-bottom: 20px;
+  text-align: center;
+`;
+
+const Box = styled.div`
+  max-width: 400px;
+  width: 100%;
+  padding: 20px;
+  background-color: ${softGreenColor};
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
+const LoginTab = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+`;
+
+const Col = styled.div`
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+`;
+
+const FormGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+`;
+
+const Input = styled.input`
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  &:focus {
+    outline: none;
+    border-color: ${softGreenColor};
+  }
+`;
+
+const Label = styled.label`
+  font-size: 14px;
+  color: white;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+`;
+
+const Button = styled.button`
+  padding: 10px;
+  background-color: white;
+  color: ${softGreenColor};
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  flex: 1;
+  &:hover {
+    background-color: ${lighterGreenColor}; 
+    color: white;
+  }
+`;
+
+const ErrorMessage = styled.p`
+  color: red;
+  text-align: center;
+`;
+
+const LoadingContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+`;
+
+const spin = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+const LoadingSpinner = styled.div`
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid ${softGreenColor};
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: ${spin} 1s linear infinite;
+`;
+
+const RegisterLink = styled.p`
+  color: white;
+  text-align: center;
+  cursor: pointer;
+  margin-top: 20px;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
 
 export default LoginForm;
