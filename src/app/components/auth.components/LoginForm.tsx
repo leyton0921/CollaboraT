@@ -59,32 +59,30 @@ const LoginForm = () => {
             {welcomeMessage && <WelcomeMessage>{welcomeMessage}</WelcomeMessage>}
             {step === 1 && (
               <FormGroup>
+                <Label htmlFor="email">Usuario:</Label>
                 <Input
                   type="text"
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  placeholder=" "
                 />
-                <Label htmlFor="email">Usuario:</Label>
                 <Button type="button" onClick={nextStep}>Siguiente</Button>
               </FormGroup>
             )}
             {step === 2 && (
               <FormGroup>
+                <Label htmlFor="password">Contraseña:</Label>
                 <Input
                   type="password"
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  placeholder=" "
                 />
-                <Label htmlFor="password">Contraseña:</Label>
                 <ButtonGroup>
-                  <Button type="button" onClick={prevStep}>Atras</Button>
-                  <Button type="submit">Entrar</Button>
+                  <Button type="button" onClick={prevStep}>Volver</Button>
+                  <Button type="submit">Iniciar sesión</Button>
                 </ButtonGroup>
               </FormGroup>
             )}
@@ -168,7 +166,7 @@ const FormGroup = styled.div`
 
 const Input = styled.input`
   padding: 10px;
-  margin-bottom: 10px;
+  margin-top: 5px; /* Separación entre etiqueta y campo */
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 16px;
@@ -191,6 +189,7 @@ const ButtonGroup = styled.div`
 
 const Button = styled.button`
   padding: 10px;
+  margin-top: 10px; /* Espaciado adicional entre el campo y el botón */
   background-color: white;
   color: ${softGreenColor};
   border: none;
