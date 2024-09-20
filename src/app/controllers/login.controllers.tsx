@@ -3,7 +3,7 @@ import { IUserCompanies } from '../interface/auth.interface';
 export const authenticateUser = async (email: string, password: string): Promise<{ user: IUserCompanies; token: string } | null> => {
   try {
     // Solicita la autenticación del usuario al servidor
-    const response = await fetch('http://localhost:4000/api/v1/auth/login', {
+    const response = await fetch('http://localhost:3000/api/v1/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

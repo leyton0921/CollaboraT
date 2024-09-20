@@ -31,16 +31,16 @@ import Spinner from '../UI/Spiner/spiner';
   if (!isAdmin) {
     return <Spinner/>
   }
-
+  const id = localStorage.getItem('token')
   return (
     <div>
 
 
-      <Navbar links={links} />
-      <UploadCSV />
+      <Navbar />
+      <UploadCSV companyId={Number(id)} />
       <UserTable />
 
     </div>
   );
 }
-export default withAdminGuard(Home);
+export default Home//withAdminGuard(Home);
