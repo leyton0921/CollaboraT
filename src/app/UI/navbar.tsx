@@ -5,8 +5,8 @@ export const Navbar = () => {
     <Nav>
       <Logo>CollaboraT</Logo>
       <Menu>
-        <a href="#">Homework</a>
-        <a href="#">User Admin</a>
+        <a href="#">Asignar tareas</a>
+
       </Menu>
       <Actions>
         <a href="#">Profile</a>
