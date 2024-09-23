@@ -357,10 +357,10 @@ const HomePage = () => {
             <FooterLink href="#features">Lo que Buscamos</FooterLink> 
           </li> 
           <li> 
-            <FooterLink href="/privacy-policy">Política de Privacidad</FooterLink> 
+            <FooterLink href="/privacy-policy">Todos los derechos reservados</FooterLink> 
           </li> 
           <li> 
-            <FooterLink href="/terms-of-service">Términos de Servicio</FooterLink> 
+            <FooterLink href="/terms-of-service">©</FooterLink> 
           </li> 
         </FooterList> 
       </Footer> 

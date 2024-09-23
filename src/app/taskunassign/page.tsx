@@ -1,8 +1,8 @@
 'use client';
 
-import { Navbar } from "../UI/navbaruser";
+import { Navbar } from "../UI/navbaruser"; // Asegúrate de que la ruta sea correcta
 import styled from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Task {
   id: string;
@@ -11,18 +11,14 @@ interface Task {
   priority: 'high' | 'medium' | 'low';
   dueDate: string;
   status: 'pending' | 'in progress' | 'completed';
-  comment: string;
+  comment?: string;
   collaboratorAssignedName?: string;
 }
 
-interface UnassignedTasksProps {
-  onTaskAssigned: (task: Task) => void;
-}
-
-export default function UnassignedTasks({ onTaskAssigned }: UnassignedTasksProps) {
+export default function AssignTasks() {
   const links = [
-    { href: "/", name: "Task" },
-    { href: "/about", name: "Home Admin" }
+    { href: "/user", name: "Mis tareas" },
+    { href: "/taskunassign", name: "Tareas sin asignar" }
   ];
 
   const initialTasks: Task[] = [
@@ -33,7 +29,6 @@ export default function UnassignedTasks({ onTaskAssigned }: UnassignedTasksProps
       priority: 'high',
       dueDate: '2024-09-30',
       status: 'pending',
-      comment: '',
     },
     {
       id: '2',
@@ -42,7 +37,6 @@ export default function UnassignedTasks({ onTaskAssigned }: UnassignedTasksProps
       priority: 'medium',
       dueDate: '2024-10-01',
       status: 'pending',
-      comment: '',
     },
     {
       id: '3',
@@ -51,7 +45,6 @@ export default function UnassignedTasks({ onTaskAssigned }: UnassignedTasksProps
       priority: 'low',
       dueDate: '2024-10-05',
       status: 'pending',
-      comment: '',
     },
     {
       id: '4',
@@ -60,15 +53,26 @@ export default function UnassignedTasks({ onTaskAssigned }: UnassignedTasksProps
       priority: 'medium',
       dueDate: '2024-10-10',
       status: 'pending',
-      comment: '',
     }
   ];
 
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [assignedTasks, setAssignedTasks] = useState<Task[]>([]);
+
+  useEffect(() => {
+    // Solo se ejecuta en el cliente
+    setTasks(initialTasks);
+  }, []);
 
   const handleAssignTask = (task: Task) => {
-    onTaskAssigned({ ...task, collaboratorAssignedName: 'Juan Pérez', status: 'pending' });
-    setTasks(tasks.filter(t => t.id !== task.id)); // Eliminar tarea de la lista
+    const assignedTask: Task = {
+      ...task,
+      collaboratorAssignedName: 'Juan Pérez',
+      status: 'pending'
+    };
+
+    setAssignedTasks((prev) => [...prev, assignedTask]);
+    setTasks((prev) => prev.filter(t => t.id !== task.id));
   };
 
   return (
@@ -97,13 +101,39 @@ export default function UnassignedTasks({ onTaskAssigned }: UnassignedTasksProps
                 <td>{task.status}</td>
                 <td>
                   <AssignButton onClick={() => handleAssignTask(task)}>
-                    Asignar a Juan Pérez
+                    Asignar a Ti Mismo
                   </AssignButton>
                 </td>
               </TaskRow>
             ))}
           </tbody>
         </TaskTable>
+
+        <h2>Tareas Asignadas</h2>
+        <AssignedTaskTable>
+          <thead>
+            <tr>
+              <th>Tarea</th>
+              <th>Descripción</th>
+              <th>Prioridad</th>
+              <th>Fecha de Vencimiento</th>
+              <th>Estado</th>
+              <th>Colaborador Asignado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {assignedTasks.map((task) => (
+              <AssignedTaskRow key={task.id}>
+                <td>{task.name}</td>
+                <td>{task.description}</td>
+                <PriorityBadge priority={task.priority}>{task.priority}</PriorityBadge>
+                <td>{task.dueDate}</td>
+                <td>{task.status}</td>
+                <td>{task.collaboratorAssignedName}</td>
+              </AssignedTaskRow>
+            ))}
+          </tbody>
+        </AssignedTaskTable>
       </Content>
     </Container>
   );
@@ -136,11 +166,17 @@ const TaskTable = styled.table`
   }
 `;
 
+const AssignedTaskTable = styled(TaskTable)`
+  margin-top: 40px; // Espaciado entre las tablas
+`;
+
 const TaskRow = styled.tr`
   &:nth-child(even) {
     background-color: #f9f9f9;
   }
 `;
+
+const AssignedTaskRow = styled(TaskRow)``;
 
 const PriorityBadge = styled.span<{ priority: 'high' | 'medium' | 'low' }>`
   display: inline-block;
