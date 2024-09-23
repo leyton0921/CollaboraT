@@ -5,7 +5,7 @@ export const registerUsers = async (companyId: number, users: User[]) => {
     const token = localStorage.getItem('token');
 
     try {
-        const response = await fetch(`http://localhost:3000/api/v1/auth/register/companies/${companyId}/collaborators`, {
+        const response = await fetch(`http://localhost:4000/api/v1/auth/register/companies/${companyId}/collaborators`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

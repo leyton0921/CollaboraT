@@ -7,7 +7,7 @@ export const registerUser = async (
   nit: string
 ): Promise<{ user: IUserCompanies | null; message: string }> => {
   try {
-    const response = await fetch('http://localhost:4000/api/v1/auth/register/company', {
+    const response = await fetch('http://localhost:4000/api/v1/auth/register/companies', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, password, nit }),
