@@ -7,13 +7,11 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Raleway ;
 }
 /* Estilos generales del cuerpo */
 body {
     margin: 0;
     padding: 0;
-    font-family: Raleway;
     background: white;
     background-size: cover;
   }
