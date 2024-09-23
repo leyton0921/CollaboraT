@@ -5,12 +5,12 @@ export const Navbar = () => {
     <Nav>
       <Logo>CollaboraT</Logo>
       <Menu>
-        <a href="#">Homework</a>
-        <a href="#">User Admin</a>
+        <a href="#">Crear tareas</a>
+        <a href="#">Cargar Usuarios</a>
       </Menu>
       <Actions>
-        <a href="#">Profile</a>
-        <LogoutButton>Logout</LogoutButton>
+        <a href="#">Perfil</a>
+        <LogoutButton>Salir</LogoutButton>
       </Actions>
     </Nav>
   );

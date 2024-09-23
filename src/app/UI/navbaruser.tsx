@@ -7,18 +7,18 @@ export const Navbar = () => {
       <Logo>CollaboraT</Logo>
       <Menu>
         <Link href="/user" passHref>
-          <MenuItem>Homework</MenuItem>
+          <MenuItem>Mis tareas</MenuItem>
         </Link>
         <Link href="/taskunassign" passHref>
-          <MenuItem>Unassigned Tasks</MenuItem>
+          <MenuItem>Tareas sin asignar</MenuItem>
         </Link>
       </Menu>
       <Actions>
         <Link href="/profile" passHref>
-          <MenuItem>Profile</MenuItem>
+          <MenuItem>Perfil</MenuItem>
         </Link>
         <Link href="/" passHref>
-          <LogoutButton>Logout</LogoutButton>
+          <LogoutButton>Salir</LogoutButton>
         </Link>
       </Actions>
     </Nav>
