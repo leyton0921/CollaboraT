@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import Link from 'next/link';
+
 
 export const Navbar = () => {
   return (
@@ -11,7 +13,9 @@ export const Navbar = () => {
       </Menu>
       <Actions>
         <a href="#">Perfil</a>
-        <LogoutButton>Salir</LogoutButton>
+        <Link href="/" passHref>
+          <LogoutButton>Salir</LogoutButton>
+        </Link>
       </Actions>
     </Nav>
   );
