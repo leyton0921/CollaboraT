@@ -1,0 +1,112 @@
+{
+  "users": [
+    {
+      "0": {
+        "id": null,
+        "name": "John Doe",
+        "email": "john.doe@example.com",
+        "role": "leader",
+        "password": "John Doe9ojtp",
+        "tasks": []
+      },
+      "1": {
+        "id": null,
+        "name": "Jane Smith",
+        "email": "jane.smith@example.com",
+        "role": "collaborator",
+        "password": "Jane Smithm6zvf",
+        "tasks": []
+      },
+      "2": {
+        "id": null,
+        "name": "Mike Johnson",
+        "email": "mike.johnson@example.com",
+        "role": "collaborator",
+        "password": "Mike Johnsonlltjo",
+        "tasks": []
+      },
+      "id": "62fb"
+    },
+    {
+      "0": {
+        "id": null,
+        "name": "John Doe",
+        "email": "john.doe@example.com",
+        "role": "leader",
+        "password": "John Doe4k4n3",
+        "tasks": []
+      },
+      "1": {
+        "id": null,
+        "name": "Jane Smith",
+        "email": "jane.smith@example.com",
+        "role": "collaborator",
+        "password": "Jane Smithcm1bw",
+        "tasks": []
+      },
+      "2": {
+        "id": null,
+        "name": "Mike Johnson",
+        "email": "mike.johnson@example.com",
+        "role": "collaborator",
+        "password": "Mike Johnsonlf5a7",
+        "tasks": []
+      },
+      "id": "55b4"
+    },
+    {
+      "0": {
+        "id": null,
+        "name": "John Doe",
+        "email": "john.doe@example.com",
+        "role": "leader",
+        "password": "John Doexib5r",
+        "tasks": []
+      },
+      "1": {
+        "id": null,
+        "name": "Jane Smith",
+        "email": "jane.smith@example.com",
+        "role": "collaborator",
+        "password": "Jane Smithesl0d",
+        "tasks": []
+      },
+      "2": {
+        "id": null,
+        "name": "Mike Johnson",
+        "email": "mike.johnson@example.com",
+        "role": "collaborator",
+        "password": "Mike Johnson6fvbf",
+        "tasks": []
+      },
+      "id": "c7b4"
+    },
+    {
+      "0": {
+        "id": null,
+        "name": "John Doe",
+        "email": "john.doe@example.com",
+        "role": "leader",
+        "password": "John Doeiqypa",
+        "tasks": []
+      },
+      "1": {
+        "id": null,
+        "name": "Jane Smith",
+        "email": "jane.smith@example.com",
+        "role": "collaborator",
+        "password": "Jane Smitha0unv",
+        "tasks": []
+      },
+      "2": {
+        "id": null,
+        "name": "Mike Johnson",
+        "email": "mike.johnson@example.com",
+        "role": "collaborator",
+        "password": "Mike Johnson3gda1",
+        "tasks": []
+      },
+      "id": "9459"
+    }
+  ]
+}

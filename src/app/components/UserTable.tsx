@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
+import React, { useState, useEffect } from 'react';
 import styles from '../styles/UserTable.module.css';
 import { MdAssignmentAdd } from "react-icons/md";
 import { AiOutlineUserDelete } from "react-icons/ai";
@@ -8,7 +6,7 @@ import FormTaskManager from './TaskManager';
 import { User } from '../interface/user.interface';
 
 const UserTable = () => {
-  const users = useSelector((state: RootState) => state.users.users);
+  const [users, setUsers] = useState<User[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [taskName, setTaskName] = useState('');
@@ -16,13 +14,32 @@ const UserTable = () => {
   const [dueDate, setDueDate] = useState('');
   const [taskPriority, setTaskPriority] = useState('low');
   const [selectedRole, setSelectedRole] = useState('');
-  const [status, setStatus] = useState('');
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
-  const [loading, setLoading] = useState(false); // Manejo del estado de carga
-  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Función para obtener usuarios
+  const fetchUsers = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('http://localhost:5000/users');
+      if (!response.ok) {
+        throw new Error('Error al cargar los usuarios');
+      }
+      const data = await response.json();
+      setUsers(data); // Asegúrate de que 'data' sea un arreglo
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Error desconocido');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers(); // Llama a la función GET al cargar el componente
+  }, []);
 
   const handleAddTask = () => {
-    // Implementa tu lógica para agregar una tarea aquí
     console.log('Tarea añadida:', {
       taskName,
       taskDescription,
@@ -31,7 +48,7 @@ const UserTable = () => {
       selectedRole,
       selectedUserId
     });
-    handleCloseForm(); // Cierra el formulario después de agregar la tarea
+    handleCloseForm();
   };
 
   const handleAssignTaskClick = (user: User) => {
@@ -43,6 +60,11 @@ const UserTable = () => {
   const handleCloseForm = () => {
     setShowForm(false);
     setSelectedUser(null);
+    setTaskName('');
+    setTaskDescription('');
+    setDueDate('');
+    setTaskPriority('low');
+    setSelectedRole('');
   };
 
   return (
@@ -59,8 +81,8 @@ const UserTable = () => {
           setTaskPriority={setTaskPriority}
           selectedRole={selectedRole}
           setSelectedRole={setSelectedRole}
-          status={status}
-          setStatus={setStatus}
+          status="" // Ajusta esto según sea necesario
+          setStatus={() => {}} // Ajusta esto según sea necesario
           selectedUserId={selectedUserId}
           setSelectedUserId={setSelectedUserId}
           loading={loading}
@@ -70,30 +92,29 @@ const UserTable = () => {
           onClose={handleCloseForm}
         />
       )}
+      {loading && <p>Cargando usuarios...</p>}
+      {error && <p className={styles.error}>{error}</p>}
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Role</th>
-            <th>Tasks</th>
-            <th>Action</th>
+            <th>Nombre</th>
+            <th>Rol</th>
+            <th>Tareas</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {users.map((user, index) => (
-            <tr key={index} className={styles.userRow}>
+            <tr key={user.id || index} className={styles.userRow}>
               <td>
                 <span className={styles.avatar}>
-                  {user.name.charAt(0).toUpperCase()}
+                  {user.name ? user.name.charAt(0).toUpperCase() : '?'}
                 </span>
-                {user.name}
+                {user.name || "No Name"}
               </td>
               <td>{user.role || "No role"}</td>
               <td>
                 <ul className={styles.taskList}>
-                  {user.tasks.map((task, taskIndex) => (
-                    <li key={taskIndex}>{task.name}</li>
-                  ))}
                 </ul>
               </td>
               <td className={styles.actions}>

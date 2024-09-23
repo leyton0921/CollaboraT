@@ -5,16 +5,16 @@ import Papa from 'papaparse';
 import { setUsers } from '../store/slices/usersSlice';
 import { User } from '../store/slices/usersSlice';
 import Style from '../styles/FileUpload.module.css';
-import { registerUsers } from '../controllers/registerUsers.controllers';
 import { generatePassword } from '../controllers/password.controllers';
 
 const UploadCSV = ({ companyId }: { companyId: number }) => {
     const dispatch = useDispatch();
-    const [fileName, setFileName] = useState('No file chosen');
+    const [fileName, setFileName] = useState('No hay archivos seleccionados');
     const [loading, setLoading] = useState(false);
 
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
+
         console.log('Archivo seleccionado:', file);
 
         if (file) {
@@ -25,23 +25,17 @@ const UploadCSV = ({ companyId }: { companyId: number }) => {
                 skipEmptyLines: true,
                 complete: (result) => {
                     console.log('Contenido del CSV:', result.data);
-                    const users: User[] = result.data.map((row: any) => {
-                        const password = generatePassword(row.name);//
-                        //aqui va la funcion de email
-                        console.log(`Email: ${row.email}, Password: ${password}`);
-
-                        return {
-                            id: parseInt(row.id, 10),
-                            name: row.name,
-                            email: row.email,
-                            role: row.role,
-                            password: password,
-                            tasks: [],
-                        };
-                    });
+                    const users: User[] = result.data.map((row: any) => ({
+                        id: parseInt(row.id, 10),
+                        name: row.name,
+                        email: row.email,
+                        role: row.role,
+                        password: generatePassword(row.name),
+                        tasks: [],
+                    }));
 
                     dispatch(setUsers(users));
-                    sendFileAndUsersToServer(users);
+                    sendUsersToServer(users);
                 },
                 error: (error) => {
                     console.error('Error parsing CSV:', error);
@@ -52,12 +46,23 @@ const UploadCSV = ({ companyId }: { companyId: number }) => {
         }
     };
 
-    const sendFileAndUsersToServer = async (users: User[]) => {
+    const sendUsersToServer = async (users: User[]) => {
         setLoading(true);
         try {
-            const token = localStorage.getItem('token');
-            const response = await registerUsers(companyId, users);
-            console.log('Usuarios registrados con éxito:', response);
+            const response = await fetch('http://localhost:5000/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(users),
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al enviar los usuarios al servidor');
+            }
+
+            const data = await response.json();
+            console.log('Usuarios registrados con éxito:', data);
         } catch (error) {
             console.error('Error al enviar los usuarios al servidor:', error);
         } finally {
@@ -67,12 +72,12 @@ const UploadCSV = ({ companyId }: { companyId: number }) => {
 
     return (
         <div>
-            <div className={Style["content-tittle"]}>
+            <div className={Style["content-title"]}>
                 <h1>Task Assignment Dashboard</h1>
             </div>
             <div className={Style["file-upload-container"]}>
                 <label htmlFor="upload" className={Style["uploadButton"]}>
-                    <span className={Style["icon"]}>📁</span> Upload
+                    <span className={Style["icon"]}>📁</span> Cargar
                 </label>
                 <input
                     type="file"
@@ -82,7 +87,14 @@ const UploadCSV = ({ companyId }: { companyId: number }) => {
                     id="upload"
                 />
                 <span className={Style["fileName"]}>{fileName}</span>
-                <button className={Style["uploadButton"]} disabled={loading}>
+                <button 
+                    type="button"  // Asegúrate de que el tipo sea "button"
+                    className={Style["uploadButton"]} 
+                    disabled={loading} 
+                    onClick={(e) => { 
+                        e.preventDefault(); // Asegúrate de prevenir el comportamiento por defecto
+                    }}
+                >
                     {loading ? 'Cargando...' : 'Descargar'}
                 </button>
             </div>

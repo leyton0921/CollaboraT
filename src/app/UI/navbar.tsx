@@ -6,7 +6,8 @@ export const Navbar = () => {
       <Logo>CollaboraT</Logo>
       <Menu>
         <a href="#">Crear tareas</a>
-        <a href="#">Cargar Usuarios</a>
+
+
       </Menu>
       <Actions>
         <a href="#">Perfil</a>

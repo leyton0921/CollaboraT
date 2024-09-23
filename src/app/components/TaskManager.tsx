@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from '../styles/TaskManager.module.css';
-import FormTaskManagerProps from '../interface/formTask.interface'
+import FormTaskManagerProps from '../interface/tasks.interface';
 import { IoIosCloseCircleOutline } from "react-icons/io";
 
 const FormTaskManager: React.FC<FormTaskManagerProps> = ({
@@ -21,13 +21,15 @@ const FormTaskManager: React.FC<FormTaskManagerProps> = ({
   loading,
   error,
   handleAddTask,
-  users,
+  users, // Aquí tienes la lista de usuarios
   onClose
 }) => {
   return (
     <div className={styles.modal}>
       <div className={styles.container}>
-        <button className={styles.closeButton} onClick={onClose}><IoIosCloseCircleOutline /></button>
+        <button className={styles.closeButton} onClick={onClose}>
+          <IoIosCloseCircleOutline />
+        </button>
         <h2>Assign Task</h2>
         {loading && <p>Loading...</p>}
         {error && <p style={{ color: 'red' }}>{error}</p>}
@@ -58,7 +60,7 @@ const FormTaskManager: React.FC<FormTaskManagerProps> = ({
         >
           <option value="" disabled>Select a user</option>
           {users.map((user) => (
-            <option key={user.id} value={user.id}>{user.name}</option>
+            <option key={user.id} value={user.id}>{user.name}</option> // Aquí accedes a user.name
           ))}
         </select>
         <select
@@ -70,7 +72,6 @@ const FormTaskManager: React.FC<FormTaskManagerProps> = ({
           <option value="medium">Medium</option>
           <option value="high">High</option>
         </select>
-
         <select
           onChange={(e) => setSelectedRole(e.target.value)}
           value={selectedRole}
@@ -87,4 +88,4 @@ const FormTaskManager: React.FC<FormTaskManagerProps> = ({
   );
 };
 
-export default FormTaskManager;
+export default FormTaskManager
