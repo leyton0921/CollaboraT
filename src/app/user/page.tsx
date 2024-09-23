@@ -2,7 +2,7 @@
 
 import { Navbar } from "../UI/navbaruser";
 import styled from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // Definición de interfaces
 interface Task {
@@ -14,16 +14,18 @@ interface Task {
   status: 'pending' | 'in progress' | 'completed';
   comment: string;
   showComment?: boolean;
-  collaboratorAssignedName: string; // Nombre del colaborador
+  collaboratorAssignedName: string;
 }
 
 export default function Users() {
   const links = [
-    { href: "/", name: "Task" },
-    { href: "/about", name: "Home Admin" }
+    { href: "/user", name: "Mis Tareas" },
+    { href: "/taskunassign", name: "Tareas Sin Asignar" },
+    { href: "/profile", name: "Perfil" },
+    { href: "/", name: "Salir" },
   ];
 
-  const collaboratorName = 'Juan Pérez'; // Nombre del mismo usuario
+  const collaboratorName = 'Juan Pérez';
 
   const initialTasks: Task[] = [
     {
@@ -130,34 +132,39 @@ export default function Users() {
 
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
 
+  useEffect(() => {
+    const storedTasks = localStorage.getItem('tasks');
+    if (storedTasks) {
+      setTasks(JSON.parse(storedTasks));
+    }
+  }, []);
+
+  const saveTasksToLocalStorage = (tasks: Task[]) => {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  };
+
   const handleStatusChange = (id: string, newStatus: 'pending' | 'in progress' | 'completed') => {
-    setTasks(tasks.map(task => {
-      if (task.id === id) {
-        return {
-          ...task,
-          status: newStatus,
-        };
-      }
-      return task;
-    }));
+    const updatedTasks = tasks.map(task => 
+      task.id === id ? { ...task, status: newStatus } : task
+    );
+    setTasks(updatedTasks);
+    saveTasksToLocalStorage(updatedTasks);
   };
 
   const handleCommentChange = (id: string, comment: string) => {
-    setTasks(tasks.map(task => {
-      if (task.id === id) {
-        return { ...task, comment };
-      }
-      return task;
-    }));
+    const updatedTasks = tasks.map(task => 
+      task.id === id ? { ...task, comment } : task
+    );
+    setTasks(updatedTasks);
+    saveTasksToLocalStorage(updatedTasks);
   };
 
   const toggleCommentVisibility = (id: string) => {
-    setTasks(tasks.map(task => {
-      if (task.id === id) {
-        return { ...task, showComment: !task.showComment };
-      }
-      return task;
-    }));
+    const updatedTasks = tasks.map(task => 
+      task.id === id ? { ...task, showComment: !task.showComment } : task
+    );
+    setTasks(updatedTasks);
+    saveTasksToLocalStorage(updatedTasks);
   };
 
   return (
@@ -277,7 +284,7 @@ const TaskCard = styled.div<{ status: string }>`
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   text-align: left;
   margin-bottom: 15px;
-  width: 100%; /* Ocupa el ancho de la columna */
+  width: 100%;
   
   h3 {
     color: #28a745;
@@ -301,9 +308,9 @@ const PriorityBadge = styled.span<{ priority: 'high' | 'medium' | 'low' }>`
   font-size: 0.8rem;
   background-color: ${({ priority }) => {
     switch (priority) {
-      case 'high': return '#dc3545'; // Rojo
-      case 'medium': return '#ffc107'; // Amarillo
-      case 'low': return '#28a745'; // Verde
+      case 'high': return '#dc3545';
+      case 'medium': return '#ffc107';
+      case 'low': return '#28a745';
       default: return '#ccc';
     }
   }};
@@ -325,9 +332,9 @@ const Button = styled.button`
   color: white;
   padding: 6px;
   border: none;
-  border-radius: 20px; /* Botones más redondeados */
+  border-radius: 20px;
   cursor: pointer;
-  font-size: 12px; /* Tamaño más pequeño */
+  font-size: 12px;
   width: 100%;
   margin-top: 10px;
 
@@ -337,7 +344,7 @@ const Button = styled.button`
 `;
 
 const ToggleButton = styled(Button)`
-  background-color: #007bff; /* Color diferente para el botón de comentario */
+  background-color: #007bff;
   
   &:hover {
     background-color: #0056b3;
@@ -345,6 +352,6 @@ const ToggleButton = styled(Button)`
 `;
 
 const SmallButton = styled(Button)`
-  padding: 4px; /* Menor padding para que sea más pequeño */
-  font-size: 12px; /* Tamaño de fuente más pequeño */
+  padding: 4px;
+  font-size: 12px;
 `;
