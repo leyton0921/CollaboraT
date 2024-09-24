@@ -99,10 +99,12 @@ const MenuItem = styled.a`
   color: white; /* Letras blancas */
   font-weight: 500;
   transition: color 0.3s ease;
-  padding: 8px 16px;
+  padding: 8px 16px; /* Espaciado consistente */
   border-radius: 12px;
   font-family: 'Segoe UI', 'Arial', sans-serif;
   text-decoration: none; /* Sin subrayado */
+  display: flex; /* Alineación vertical */
+  align-items: center; /* Alineación vertical */
 
   &:hover {
     color: #00a64e;
@@ -121,6 +123,8 @@ const LogoutButton = styled.button`
   cursor: pointer;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   font-family: 'Segoe UI', 'Arial', sans-serif;
+  display: flex; /* Alineación vertical */
+  align-items: center; /* Alineación vertical */
 
   &:hover {
     background-color: #008f44; /* Verde más oscuro al hacer hover */
