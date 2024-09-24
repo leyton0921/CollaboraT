@@ -1,12 +1,25 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-export const Navbar = () => {
+
+ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem('id');
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    localStorage.removeItem('name');
+    localStorage.removeItem('user');
+    router.push('/');
   };
 
   return (
@@ -26,12 +39,15 @@ export const Navbar = () => {
           <MenuItem>Perfil</MenuItem>
         </Link>
         <Link href="/" passHref>
-          <LogoutButton>Salir</LogoutButton>
+                  <LogoutButton onClick={handleLogout}>Salir</LogoutButton>
+
         </Link>
       </Menu>
     </Nav>
   );
 };
+
+export default Navbar
 
 // Styled Components
 const Nav = styled.nav`

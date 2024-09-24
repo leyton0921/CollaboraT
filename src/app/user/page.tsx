@@ -1,8 +1,9 @@
 'use client';
 
-import { Navbar } from "../UI/navbaruser";
+import NavbarUser from "../UI/navbar";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
+import { useRouter } from 'next/navigation';
 
 // Definición de interfaces
 interface Task {
@@ -17,17 +18,18 @@ interface Task {
   collaboratorAssignedName: string;
 }
 
-export default function Users() {
-  const links = [
-    { href: "/user", name: "Mis Tareas" },
-    { href: "/taskunassign", name: "Tareas Sin Asignar" },
-    { href: "/profile", name: "Perfil" },
-    { href: "/", name: "Salir" },
-  ];
-
+function Users() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const projectId = '3bea95d3-31a4-4307-9e4a-055ae943ef65'; // Cambia esto por tu ID de proyecto
+  const router = useRouter();
+
+  useEffect(() => {
+    const userRole = localStorage.getItem('role');
+    if (userRole !== 'collaborator') {
+      router.push('/'); 
+    }
+  }, [router]);
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -89,7 +91,7 @@ export default function Users() {
 
   return (
     <Container>
-      <Navbar links={links} />
+      <NavbarUser />
       <Content>
         <h2>Todas las Tareas</h2>
         <TaskGrid>
@@ -124,6 +126,8 @@ export default function Users() {
     </Container>
   );
 }
+
+export default Users;
 
 // Estilos
 const Container = styled.div`
