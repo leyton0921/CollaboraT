@@ -26,118 +26,28 @@ export default function Users() {
   ];
 
   const collaboratorName = 'Juan Pérez';
-
-  const initialTasks: Task[] = [
-    {
-      id: '1',
-      name: 'Actualizar la base de datos',
-      description: 'Revisar y actualizar la base de datos del sistema.',
-      priority: 'high',
-      dueDate: '2024-09-30',
-      status: 'in progress',
-      comment: '',
-      collaboratorAssignedName: collaboratorName
-    },
-    {
-      id: '2',
-      name: 'Revisión de código',
-      description: 'Hacer revisión de código del último sprint.',
-      priority: 'medium',
-      dueDate: '2024-10-01',
-      status: 'pending',
-      comment: '',
-      collaboratorAssignedName: collaboratorName
-    },
-    {
-      id: '3',
-      name: 'Reunión con cliente',
-      description: 'Reunirse con el cliente para revisión del proyecto.',
-      priority: 'low',
-      dueDate: '2024-10-05',
-      status: 'completed',
-      comment: 'Revisado y aprobado por el cliente.',
-      collaboratorAssignedName: collaboratorName
-    },
-    {
-      id: '4',
-      name: 'Enviar informe final',
-      description: 'Preparar y enviar el informe final al cliente.',
-      priority: 'medium',
-      dueDate: '2024-10-10',
-      status: 'pending',
-      comment: '',
-      collaboratorAssignedName: collaboratorName
-    },
-    {
-      id: '5',
-      name: 'Realizar pruebas unitarias',
-      description: 'Ejecutar pruebas unitarias en el módulo de autenticación.',
-      priority: 'high',
-      dueDate: '2024-10-15',
-      status: 'in progress',
-      comment: '',
-      collaboratorAssignedName: collaboratorName
-    },
-    {
-      id: '6',
-      name: 'Actualizar documentación',
-      description: 'Asegurarse de que toda la documentación esté actualizada.',
-      priority: 'low',
-      dueDate: '2024-10-20',
-      status: 'completed',
-      comment: 'Documentación actualizada.',
-      collaboratorAssignedName: collaboratorName
-    },
-    {
-      id: '7',
-      name: 'Revisar requisitos del cliente',
-      description: 'Revisar los requisitos con el cliente antes de la entrega.',
-      priority: 'medium',
-      dueDate: '2024-10-25',
-      status: 'pending',
-      comment: '',
-      collaboratorAssignedName: collaboratorName
-    },
-    {
-      id: '8',
-      name: 'Planificar próximo sprint',
-      description: 'Definir los objetivos para el próximo sprint.',
-      priority: 'high',
-      dueDate: '2024-10-30',
-      status: 'in progress',
-      comment: '',
-      collaboratorAssignedName: collaboratorName
-    },
-    {
-      id: '9',
-      name: 'Configurar servidor de producción',
-      description: 'Asegurarse de que el servidor de producción esté configurado correctamente.',
-      priority: 'low',
-      dueDate: '2024-11-01',
-      status: 'completed',
-      comment: 'Servidor configurado correctamente.',
-      collaboratorAssignedName: collaboratorName
-    },
-    {
-      id: '10',
-      name: 'Hacer revisión final',
-      description: 'Revisar todo el proyecto antes de la entrega final.',
-      priority: 'high',
-      dueDate: '2024-11-05',
-      status: 'pending',
-      comment: '',
-      collaboratorAssignedName: collaboratorName
-    }
-  ];
-
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState(true);
+  const projectId = 'id'; // Cambia esto por tu ID de proyecto
 
   useEffect(() => {
-    const storedTasks = localStorage.getItem('tasks');
-    if (storedTasks) {
-      setTasks(JSON.parse(storedTasks));
-    }
-  }, []);
+    const fetchTasks = async () => {
+      try {
+        const response = await fetch(`http://localhost:4000/api/v1/tasks/projects`); // Cambia la URL según tu API
+        if (!response.ok) throw new Error('Error al cargar las tareas');
+        
+        const data: Task[] = await response.json();
+        setTasks(data);
+        saveTasksToLocalStorage(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTasks();
+  }, [projectId]);
 
   const saveTasksToLocalStorage = (tasks: Task[]) => {
     localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -166,6 +76,10 @@ export default function Users() {
     setTasks(updatedTasks);
     saveTasksToLocalStorage(updatedTasks);
   };
+
+  if (loading) {
+    return <Container>Cargando tareas...</Container>;
+  }
 
   return (
     <Container>
