@@ -1,44 +1,52 @@
-"use client";
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { registerUser } from '../../controllers/register.controller';
-import styled from 'styled-components';
+"use client"; 
+
+import React, { useState } from 'react'; 
+import { useRouter } from 'next/navigation'; 
+import { registerUser } from '../../controllers/register.controller'; 
+import styled from 'styled-components'; 
 
 const RegisterForm = () => {
+  
   const [step, setStep] = useState(1);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [nit, setNit] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [welcomeMessage, setWelcomeMessage] = useState<string | null>(null);
-  const router = useRouter();
+  const [name, setName] = useState(''); 
+  const [email, setEmail] = useState(''); 
+  const [password, setPassword] = useState(''); 
+  const [nit, setNit] = useState(''); 
+  const [error, setError] = useState<string | null>(null); 
+  const [welcomeMessage, setWelcomeMessage] = useState<string | null>(null); 
+  const router = useRouter(); 
 
+  // Handle form submission.
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError(null);
-    setWelcomeMessage(null);
+    e.preventDefault(); // Prevent default form submission behavior.
+    setError(null); // Clear any previous error messages.
+    setWelcomeMessage(null); // Clear welcome message.
 
+    // Call the registerUser function and get the response.
     const { user, message } = await registerUser(name, email, password, nit);
 
+    // Check if user registration was successful.
     if (user) {
-      setWelcomeMessage('¡Registro exitoso! Redirigiendo a inicio de sesión...');
-      setTimeout(() => router.push('/login'), 3000);
+      setWelcomeMessage('¡Registro exitoso! Redirigiendo a inicio de sesión...'); // Set success message.
+      setTimeout(() => router.push('/login'), 3000); // Redirect to login after 3 seconds.
     } else {
-      setError(message || 'El registro falló');
+      setError(message || 'El registro falló'); // Set error message if registration failed.
     }
   };
 
+  // Move to the next step in the registration process.
   const nextStep = () => {
-    setStep((prevStep) => Math.min(prevStep + 1, 4));
+    setStep((prevStep) => Math.min(prevStep + 1, 4)); // Increment step but limit to 4.
   };
 
+  // Move to the previous step in the registration process.
   const prevStep = () => {
-    setStep((prevStep) => Math.max(prevStep - 1, 1));
+    setStep((prevStep) => Math.max(prevStep - 1, 1)); // Decrement step but not below 1.
   };
 
+  // Redirect to the login page.
   const handleLoginRedirect = () => {
-    router.push('/login'); // Redirigir a la página de inicio de sesión
+    router.push('/login'); // Redirect to login page.
   };
 
   return (
