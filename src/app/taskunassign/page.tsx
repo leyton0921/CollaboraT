@@ -1,8 +1,9 @@
 'use client';
 
-import { Navbar } from "../UI/navbaruser"; // Asegúrate de que la ruta sea correcta
+import { Navbar } from "../UI/navbaruser";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
+import Modal from './modal'; // Asegúrate de que esta ruta sea correcta
 
 interface Task {
   id: string;
@@ -11,7 +12,6 @@ interface Task {
   priority: 'high' | 'medium' | 'low';
   dueDate: string;
   status: 'pending' | 'in progress' | 'completed';
-  comment?: string;
   collaboratorAssignedName?: string;
 }
 
@@ -22,45 +22,15 @@ export default function AssignTasks() {
   ];
 
   const initialTasks: Task[] = [
-    {
-      id: '1',
-      name: 'Actualizar la base de datos',
-      description: 'Revisar y actualizar la base de datos del sistema.',
-      priority: 'high',
-      dueDate: '2024-09-30',
-      status: 'pending',
-    },
-    {
-      id: '2',
-      name: 'Revisión de código',
-      description: 'Hacer revisión de código del último sprint.',
-      priority: 'medium',
-      dueDate: '2024-10-01',
-      status: 'pending',
-    },
-    {
-      id: '3',
-      name: 'Reunión con cliente',
-      description: 'Reunirse con el cliente para revisión del proyecto.',
-      priority: 'low',
-      dueDate: '2024-10-05',
-      status: 'pending',
-    },
-    {
-      id: '4',
-      name: 'Enviar informe final',
-      description: 'Preparar y enviar el informe final al cliente.',
-      priority: 'medium',
-      dueDate: '2024-10-10',
-      status: 'pending',
-    }
+    // ... tus tareas iniciales
   ];
 
   const [tasks, setTasks] = useState<Task[]>([]);
   const [assignedTasks, setAssignedTasks] = useState<Task[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [taskToUnassign, setTaskToUnassign] = useState<Task | null>(null);
 
   useEffect(() => {
-    // Solo se ejecuta en el cliente
     setTasks(initialTasks);
   }, []);
 
@@ -73,68 +43,88 @@ export default function AssignTasks() {
 
     setAssignedTasks((prev) => [...prev, assignedTask]);
     setTasks((prev) => prev.filter(t => t.id !== task.id));
+    // Aquí puedes llamar a tu API para guardar el cambio
+  };
+
+  const handleOpenModal = (task: Task) => {
+    setTaskToUnassign(task);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setTaskToUnassign(null);
+  };
+
+  const handleConfirmUnassign = async () => {
+    if (!taskToUnassign) return;
+
+    // Actualiza el estado
+    setAssignedTasks((prev) => prev.filter(t => t.id !== taskToUnassign.id));
+
+    // Aquí puedes llamar a tu API para guardar el cambio
+    try {
+      await fetch(`http://localhost:4000/api/v1/tasks/unassign/${taskToUnassign.id}`, {
+        method: 'PUT', // O el método que corresponda
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ assigned: false })
+      });
+    } catch (error) {
+      console.error("Error desasignando tarea:", error);
+    }
+
+    handleCloseModal();
   };
 
   return (
     <Container>
       <Navbar links={links} />
       <Content>
-        <h2>Tareas Sin Asignar</h2>
-        <TaskTable>
-          <thead>
-            <tr>
-              <th>Tarea</th>
-              <th>Descripción</th>
-              <th>Prioridad</th>
-              <th>Fecha de Vencimiento</th>
-              <th>Estado</th>
-              <th>Acción</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Section>
+          <SectionTitle>Tareas Sin Asignar</SectionTitle>
+          <TaskGrid>
             {tasks.map((task) => (
-              <TaskRow key={task.id}>
-                <td>{task.name}</td>
-                <td>{task.description}</td>
+              <TaskCard key={task.id}>
+                <h3>{task.name}</h3>
+                <p><strong>Descripción:</strong> {task.description}</p>
                 <PriorityBadge priority={task.priority}>{task.priority}</PriorityBadge>
-                <td>{task.dueDate}</td>
-                <td>{task.status}</td>
-                <td>
-                  <AssignButton onClick={() => handleAssignTask(task)}>
-                    Asignar a Ti Mismo
-                  </AssignButton>
-                </td>
-              </TaskRow>
+                <p><strong>Fecha de Vencimiento:</strong> {task.dueDate}</p>
+                <p><strong>Estado:</strong> {task.status}</p>
+                <AssignButton onClick={() => handleAssignTask(task)}>
+                  Asignar a Ti Mismo
+                </AssignButton>
+              </TaskCard>
             ))}
-          </tbody>
-        </TaskTable>
+          </TaskGrid>
+        </Section>
 
-        <h2>Tareas Asignadas</h2>
-        <AssignedTaskTable>
-          <thead>
-            <tr>
-              <th>Tarea</th>
-              <th>Descripción</th>
-              <th>Prioridad</th>
-              <th>Fecha de Vencimiento</th>
-              <th>Estado</th>
-              <th>Colaborador Asignado</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Section>
+          <SectionTitle>Tareas Asignadas</SectionTitle>
+          <AssignedTaskGrid>
             {assignedTasks.map((task) => (
-              <AssignedTaskRow key={task.id}>
-                <td>{task.name}</td>
-                <td>{task.description}</td>
+              <TaskCard key={task.id}>
+                <h3>{task.name}</h3>
+                <p><strong>Descripción:</strong> {task.description}</p>
                 <PriorityBadge priority={task.priority}>{task.priority}</PriorityBadge>
-                <td>{task.dueDate}</td>
-                <td>{task.status}</td>
-                <td>{task.collaboratorAssignedName}</td>
-              </AssignedTaskRow>
+                <p><strong>Fecha de Vencimiento:</strong> {task.dueDate}</p>
+                <p><strong>Estado:</strong> {task.status}</p>
+                <p><strong>Colaborador Asignado:</strong> {task.collaboratorAssignedName}</p>
+                <AssignButton onClick={() => handleOpenModal(task)}>
+                  Desasignar
+                </AssignButton>
+              </TaskCard>
             ))}
-          </tbody>
-        </AssignedTaskTable>
+          </AssignedTaskGrid>
+        </Section>
       </Content>
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onConfirm={handleConfirmUnassign}
+      />
     </Container>
   );
 }
@@ -150,33 +140,43 @@ const Content = styled.div`
   padding: 0 20px;
 `;
 
-const TaskTable = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-
-  th, td {
-    border: 1px solid #ccc;
-    padding: 8px;
-    text-align: left;
-  }
-
-  th {
-    background-color: #f4f4f4;
-  }
+const Section = styled.section`
+  margin-top: 40px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
-const AssignedTaskTable = styled(TaskTable)`
-  margin-top: 40px; // Espaciado entre las tablas
+const SectionTitle = styled.h2`
+  color: #28a745;
+  margin-bottom: 20px;
 `;
 
-const TaskRow = styled.tr`
-  &:nth-child(even) {
-    background-color: #f9f9f9;
+const TaskGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+`;
+
+const AssignedTaskGrid = styled(TaskGrid)``;
+
+const TaskCard = styled.div`
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: left;
+
+  h3 {
+    color: #28a745;
+    margin-bottom: 10px;
+  }
+
+  p {
+    margin: 5px 0;
   }
 `;
-
-const AssignedTaskRow = styled(TaskRow)``;
 
 const PriorityBadge = styled.span<{ priority: 'high' | 'medium' | 'low' }>`
   display: inline-block;

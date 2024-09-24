@@ -1,26 +1,34 @@
 import styled from 'styled-components';
 import Link from 'next/link';
+import { useState } from 'react';
 
 export const Navbar = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
     <Nav>
       <Logo>CollaboraT</Logo>
-      <Menu>
+      <ToggleButton onClick={toggleMenu}>
+        ☰
+      </ToggleButton>
+      <Menu open={isMenuOpen}>
         <Link href="/user" passHref>
           <MenuItem>Mis Tareas</MenuItem>
         </Link>
         <Link href="/taskunassign" passHref>
           <MenuItem>Tareas Sin Asignar</MenuItem>
         </Link>
-      </Menu>
-      <Actions>
         <Link href="#" passHref>
           <MenuItem>Perfil</MenuItem>
         </Link>
         <Link href="/" passHref>
           <LogoutButton>Salir</LogoutButton>
         </Link>
-      </Actions>
+      </Menu>
     </Nav>
   );
 };
@@ -36,18 +44,55 @@ const Nav = styled.nav`
   border-radius: 16px;
   margin: 10px;
   font-family: 'Segoe UI', 'Arial', sans-serif;
+  position: relative;
+
+  @media (max-width: 768px) {
+    flex-direction: row; /* Mantener en fila */
+  }
 `;
 
 const Logo = styled.div`
-  font-family: 'Segoe UI', 'Arial', sans-serif;  
   font-size: 1.8rem;
   color: white; /* Letras blancas */
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 `;
 
-const Menu = styled.div`
-  display: flex;
-  gap: 24px;
+const ToggleButton = styled.button`
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  position: absolute;
+  top: 16px; /* Ajusta según sea necesario */
+  right: 24px; /* Colocarlo en la esquina superior derecha */
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+`;
+
+const Menu = styled.div<{ open: boolean }>`
+  display: ${({ open }) => (open ? 'flex' : 'none')}; /* Ocultar el menú por defecto */
+  flex-direction: column;
+  gap: 16px;
+  position: absolute;
+  top: 60px; /* Ajusta según la altura de tu nav */
+  right: 24px;
+  background-color: #00a64e;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  transition: max-height 0.3s ease-in;
+
+  @media (min-width: 769px) {
+    display: flex;
+    position: static;
+    max-height: none;
+    flex-direction: row;
+    gap: 24px;
+  }
 `;
 
 const MenuItem = styled.a`
@@ -62,27 +107,6 @@ const MenuItem = styled.a`
   &:hover {
     color: #00a64e;
     background-color: white; /* Efecto de hover */
-  }
-`;
-
-const Actions = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 16px;
-
-  a {
-    color: white; /* Letras blancas */
-    font-weight: 500;
-    transition: color 0.3s ease;
-    padding: 8px 16px;
-    border-radius: 12px;
-    font-family: 'Segoe UI', 'Arial', sans-serif;
-    text-decoration: none; /* Sin subrayado */
-
-    &:hover {
-      color: #00a64e;
-      background-color: white; /* Efecto de hover */
-    }
   }
 `;
 

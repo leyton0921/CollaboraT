@@ -25,17 +25,16 @@ export default function Users() {
     { href: "/", name: "Salir" },
   ];
 
-  const collaboratorName = 'Juan Pérez';
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
-  const projectId = 'id'; // Cambia esto por tu ID de proyecto
+  const projectId = '3bea95d3-31a4-4307-9e4a-055ae943ef65'; // Cambia esto por tu ID de proyecto
 
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/api/v1/tasks/projects`); // Cambia la URL según tu API
+        const response = await fetch(`http://localhost:4000/api/v1/tasks/projects?projectId=${projectId}`);
         if (!response.ok) throw new Error('Error al cargar las tareas');
-        
+
         const data: Task[] = await response.json();
         setTasks(data);
         saveTasksToLocalStorage(data);
@@ -46,7 +45,14 @@ export default function Users() {
       }
     };
 
-    fetchTasks();
+    // Cargar tareas desde localStorage si existen
+    const storedTasks = localStorage.getItem('tasks');
+    if (storedTasks) {
+      setTasks(JSON.parse(storedTasks));
+      setLoading(false);
+    } else {
+      fetchTasks();
+    }
   }, [projectId]);
 
   const saveTasksToLocalStorage = (tasks: Task[]) => {
@@ -85,85 +91,35 @@ export default function Users() {
     <Container>
       <Navbar links={links} />
       <Content>
-        <TaskColumns>
-          <Column>
-            <h2>Tareas Pendientes</h2>
-            {tasks.filter(task => task.status === 'pending').map((task) => (
-              <TaskCard key={task.id} status={task.status}>
-                <h3>{task.name}</h3>
-                <p><strong>Descripción:</strong> {task.description}</p>
-                <PriorityBadge priority={task.priority}>{task.priority}</PriorityBadge>
-                <p><strong>Fecha de Vencimiento:</strong> {task.dueDate}</p>
-                <p><strong>Estado:</strong> {task.status}</p>
-                <p><strong>Asignado a:</strong> {task.collaboratorAssignedName}</p>
-                <ToggleButton onClick={() => toggleCommentVisibility(task.id)}>
-                  {task.showComment ? 'Ocultar Comentario' : 'Dejar Comentario'}
-                </ToggleButton>
-                {task.showComment && (
-                  <CommentField 
-                    value={task.comment} 
-                    onChange={(e) => handleCommentChange(task.id, e.target.value)} 
-                    placeholder="Deja un comentario..."
-                  />
-                )}
-                <SmallButton onClick={() => handleStatusChange(task.id, 'in progress')}>
-                  Marcar como En Progreso
-                </SmallButton>
-                <SmallButton onClick={() => handleStatusChange(task.id, 'completed')}>
-                  Marcar como Completada
-                </SmallButton>
-              </TaskCard>
-            ))}
-          </Column>
-          <Column>
-            <h2>Tareas en Progreso</h2>
-            {tasks.filter(task => task.status === 'in progress').map((task) => (
-              <TaskCard key={task.id} status={task.status}>
-                <h3>{task.name}</h3>
-                <p><strong>Descripción:</strong> {task.description}</p>
-                <PriorityBadge priority={task.priority}>{task.priority}</PriorityBadge>
-                <p><strong>Fecha de Vencimiento:</strong> {task.dueDate}</p>
-                <p><strong>Estado:</strong> {task.status}</p>
-                <p><strong>Asignado a:</strong> {task.collaboratorAssignedName}</p>
+        <h2>Todas las Tareas</h2>
+        <TaskGrid>
+          {tasks.map((task) => (
+            <TaskCard key={task.id} status={task.status}>
+              <h3>{task.name}</h3>
+              <p><strong>Descripción:</strong> {task.description}</p>
+              <PriorityBadge priority={task.priority}>{task.priority}</PriorityBadge>
+              <p><strong>Fecha de Vencimiento:</strong> {task.dueDate}</p>
+              <p><strong>Estado:</strong> {task.status}</p>
+              <p><strong>Asignado a:</strong> {task.collaboratorAssignedName}</p>
+              <ToggleButton onClick={() => toggleCommentVisibility(task.id)}>
+                {task.showComment ? 'Ocultar Comentario' : 'Dejar Comentario'}
+              </ToggleButton>
+              {task.showComment && (
                 <CommentField 
                   value={task.comment} 
                   onChange={(e) => handleCommentChange(task.id, e.target.value)} 
-                  placeholder="Edita tu comentario..."
+                  placeholder="Deja un comentario..."
                 />
-                <SmallButton onClick={() => handleStatusChange(task.id, 'pending')}>
-                  Marcar como Pendiente
-                </SmallButton>
-                <SmallButton onClick={() => handleStatusChange(task.id, 'completed')}>
-                  Marcar como Completada
-                </SmallButton>
-              </TaskCard>
-            ))}
-          </Column>
-          <Column>
-            <h2>Tareas Completadas</h2>
-            {tasks.filter(task => task.status === 'completed').map((task) => (
-              <TaskCard key={task.id} status={task.status}>
-                <h3>{task.name}</h3>
-                <p><strong>Descripción:</strong> {task.description}</p>
-                <PriorityBadge priority={task.priority}>{task.priority}</PriorityBadge>
-                <p><strong>Fecha de Vencimiento:</strong> {task.dueDate}</p>
-                <p><strong>Estado:</strong> {task.status}</p>
-                <p><strong>Asignado a:</strong> {task.collaboratorAssignedName}</p>
-                <CommentField 
-                  value={task.comment} 
-                  onChange={(e) => handleCommentChange(task.id, e.target.value)} 
-                  placeholder="Edita tu comentario..."
-                />
-                <SmallButton onClick={() => handleStatusChange(task.id, 'pending')}>
-                  Marcar como Pendiente
-                </SmallButton>
-                <SmallButton onClick={() => handleStatusChange(task.id, 'in progress')}>
-                  Marcar como En Progreso
-                </SmallButton>
-              </TaskCard>
-            ))}
-          </Column>
-        </TaskColumns>
+              )}
+              <SmallButton onClick={() => handleStatusChange(task.id, 'in progress')}>
+                Marcar como En Progreso
+              </SmallButton>
+              <SmallButton onClick={() => handleStatusChange(task.id, 'completed')}>
+                Marcar como Completada
+              </SmallButton>
+            </TaskCard>
+          ))}
+        </TaskGrid>
       </Content>
     </Container>
   );
@@ -180,15 +136,15 @@ const Content = styled.div`
   padding: 0 20px;
 `;
 
-const TaskColumns = styled.div`
-  display: flex;
-  justify-content: space-between;
+const TaskGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Tamaño mínimo adaptable */
+  gap: 20px; /* Espacio entre las tarjetas */
   margin-top: 20px;
-`;
 
-const Column = styled.div`
-  flex: 1;
-  margin: 0 10px;
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr; /* Una columna en pantallas pequeñas */
+  }
 `;
 
 const TaskCard = styled.div<{ status: string }>`
@@ -197,8 +153,6 @@ const TaskCard = styled.div<{ status: string }>`
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   text-align: left;
-  margin-bottom: 15px;
-  width: 100%;
   
   h3 {
     color: #28a745;
