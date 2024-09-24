@@ -1,8 +1,21 @@
 import styled from 'styled-components';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 
-export const Navbar = () => {
+const Navbar = () => {
+
+
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem('id');
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    localStorage.removeItem('name');
+    localStorage.removeItem('user');
+    router.push('/');
+  };
   return (
     <Nav>
       <Logo>CollaboraT</Logo>
@@ -13,13 +26,13 @@ export const Navbar = () => {
       </Menu>
       <Actions>
         <a href="#">Perfil</a>
-        <Link href="/" passHref>
-          <LogoutButton>Salir</LogoutButton>
-        </Link>
+        <LogoutButton onClick={handleLogout}>Salir</LogoutButton>
       </Actions>
     </Nav>
   );
 };
+
+export default Navbar
 
 // Styled Components
 const Nav = styled.nav`

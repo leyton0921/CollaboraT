@@ -1,46 +1,32 @@
-"use client"
+"use client";
 import UploadCSV from '../components/UploadCSV';
-import TaskManager from '../controllers/task.controller';
-
-
 import UserTable from '../components/UserTable';
-import { useState, useEffect } from 'react';
-import { Navbar } from '../UI/navbar';
+import { useEffect } from 'react';
+import Navbar from '../UI/navbar';
 import { useRouter } from 'next/navigation';
-
-import withAdminGuard from '../auth/guard/authcontext';
-
 import Spinner from '../UI/Spiner/spiner';
 
-
-
-  function Home() {
-  const [isAdmin, setIsAdmin] = useState(true);  // Cambiar a false para la vista de usuario
-  const router = useRouter();
-  const links = [
-    { href: "/assignTasks", name: "assign tasks" },
-    { href: "/admin", name: "Home Admnin" }
-  ];
+const HomeAdmin = () => { 
+  const router = useRouter(); 
+  const role = localStorage.getItem('role');
+  const id = localStorage.getItem('id');
 
   useEffect(() => {
-    if (!isAdmin) {
-      router.push('/user');
+    if (role !== 'company') {
+      router.push("/"); 
     }
-  }, [isAdmin, router]);
+  }, [role, router]);
 
-  if (!isAdmin) {
-    return <Spinner/>
+  if (role !== 'company') {
+    return <Spinner />;
   }
-  const id = localStorage.getItem('token')
+
   return (
     <div>
-
-
       <Navbar />
-      <UploadCSV companyId={Number(id)} />
+      <UploadCSV companyId={id} />
       <UserTable />
-
     </div>
   );
 }
-export default Home//withAdminGuard(Home);
+export default HomeAdmin;

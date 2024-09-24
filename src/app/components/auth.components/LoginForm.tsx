@@ -25,10 +25,17 @@ const LoginForm = () => {
       const { user, token } = result;
       setWelcomeMessage(`Hello, welcome to Collaborat, ${user.name}!`); 
       localStorage.setItem('token', token);
-      console.log('user:', user);
-      
+      localStorage.setItem('role', user.role);
+
+   
       setTimeout(() => {
-        router.push('/admin');
+        if (user.role === 'company') {
+          router.push('/admin'); 
+        } else if (user.role === 'collaborator') {
+          router.push('/user');
+        } else {
+          router.push('/'); 
+        }
       }, 3000);
     } else {
       setError('Login failed: Invalid email or password');
@@ -101,6 +108,8 @@ const LoginForm = () => {
     </Background>
   );
 };
+
+export default LoginForm;
 
 // Styled Components
 const softGreenColor = '#00c767';
@@ -239,5 +248,3 @@ const RegisterLink = styled.p`
     text-decoration: underline;
   }
 `;
-
-export default LoginForm;
