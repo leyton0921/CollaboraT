@@ -58,3 +58,52 @@
 .table tr:nth-child(even) {
   background-color: #f9f9f9;
 }
+
+
+.confirmationBanner {
+  background-color: #ffdddd;
+  color: #d8000c;
+  padding: 15px;
+  margin: 20px 0;
+  border: 1px solid #d8000c;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.confirmationBanner p {
+  margin: 0;
+  flex-grow: 1;
+}
+
+.confirmationBanner button {
+  margin-left: 10px;
+  background-color: #d8000c;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.confirmationBanner button:hover {
+  background-color: #c7000a;
+}
+
+
+.roleForm {
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  padding: 15px;
+  margin: 20px 0;
+  border-radius: 5px;
+}
+
+.roleForm h3 {
+  margin: 0 0 10px;
+}
+
+.roleForm select {
+  margin-right: 10px;
+}
