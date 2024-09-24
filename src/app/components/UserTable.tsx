@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../styles/UserTable.module.css';
-import { MdAssignmentAdd } from "react-icons/md";
 import { AiOutlineUserDelete } from "react-icons/ai";
 import FormTaskManager from './TaskManager';
 import { User } from '../interface/user.interface';
@@ -142,6 +141,7 @@ const UserTable = () => {
       setLoading(false);
     }
   };
+
   return (
     <div className={styles.container}>
       {showDeleteConfirm && (
@@ -219,7 +219,7 @@ const UserTable = () => {
                   className={styles.assignButton}
                   onClick={() => confirmDeleteUser(user.id)}
                 >
-                  <AiOutlineUserDelete />
+                  <AiOutlineUserDelete size={20} />
                 </button>
               </td>
             </tr>
