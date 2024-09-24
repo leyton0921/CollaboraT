@@ -1,3 +1,5 @@
+// src/services/projectService.ts
+
 import { 
     IBodyResponseGetAllProjects,
     BodyRequestCreateProject,
@@ -5,19 +7,27 @@ import {
     BodyResponseUpdateProject,
     BodyResponseDeleteProject,
     BodyRequestUpdateProject,
-    Project
   } from '../interface/project.interface';
   
-  const BASE_URL = 'https://simuate-test-backend-1.onrender.com/api/projects';
+  const BASE_URL = 'http://localhost:4000/api/v1/projects/';
+  
+  const getCompanyId = (): string => {
+    const companyId = localStorage.getItem('id');
+    if (!companyId) {
+      throw new Error('Company ID not found in local storage');
+    }
+    return companyId;
+  };
   
   export const getAllProjects = async (): Promise<IBodyResponseGetAllProjects | null> => {
     try {
-      const response = await fetch(`${BASE_URL}/`, { method: 'GET' });
-      
+      const companyId = getCompanyId();
+      const response = await fetch(`${BASE_URL}${companyId}/`, { method: 'GET' });
+  
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+  
       const data: IBodyResponseGetAllProjects = await response.json();
       return data;
     } catch (error) {
@@ -28,18 +38,19 @@ import {
   
   export const createProject = async (project: BodyRequestCreateProject): Promise<BodyResponseCreateProject | null> => {
     try {
-      const response = await fetch(`${BASE_URL}/`, {
+      const companyId = getCompanyId();
+      const response = await fetch(`${BASE_URL}${companyId}/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(project),
       });
-      
+  
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+  
       const data: BodyResponseCreateProject = await response.json();
       return data;
     } catch (error) {
@@ -50,18 +61,19 @@ import {
   
   export const updateProject = async (id: string, project: BodyRequestUpdateProject): Promise<BodyResponseUpdateProject | null> => {
     try {
-      const response = await fetch(`${BASE_URL}/${id}`, {
+      const companyId = getCompanyId();
+      const response = await fetch(`${BASE_URL}${companyId}/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(project),
       });
-      
+  
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+  
       const data: BodyResponseUpdateProject = await response.json();
       return data;
     } catch (error) {
@@ -72,12 +84,13 @@ import {
   
   export const deleteProject = async (id: string): Promise<BodyResponseDeleteProject | null> => {
     try {
-      const response = await fetch(`${BASE_URL}/${id}`, { method: 'DELETE' });
-      
+      const companyId = getCompanyId();
+      const response = await fetch(`${BASE_URL}${companyId}/${id}`, { method: 'DELETE' });
+  
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+  
       const data: BodyResponseDeleteProject = await response.json();
       return data;
     } catch (error) {

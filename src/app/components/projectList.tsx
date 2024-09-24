@@ -1,4 +1,6 @@
-// src/ProjectList.tsx
+// src/app/components/projectList.tsx
+"use client"; // Asegúrate de agregar esta línea al principio
+
 import React, { useState, useEffect } from 'react';
 import ProjectForm from './projectForm';
 import { 
