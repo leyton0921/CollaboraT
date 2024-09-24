@@ -1,15 +1,9 @@
-'use client';
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import Papa from 'papaparse';
-import { setUsers } from '../store/slices/usersSlice';
-import { User } from '../store/slices/usersSlice';
-import { generatePassword } from '../controllers/password.controllers';
+"use client";
+import React, { useState } from "react";
+import Style from "../styles/FileUpload.module.css";
 
-// Función para manejar la carga del archivo CSV
-const UploadCSV = ({ companyId }: { companyId: number }) => {
-    const dispatch = useDispatch();
-    const [fileName, setFileName] = useState('No hay archivos seleccionados');
+const UploadCSV = ({ companyId }: { companyId: string | null }) => {
+    const [fileName, setFileName] = useState("No hay archivos seleccionados");
     const [loading, setLoading] = useState(false);
 
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,80 +11,79 @@ const UploadCSV = ({ companyId }: { companyId: number }) => {
 
         if (file) {
             setFileName(file.name);
-
-            Papa.parse(file, {
-                header: true,
-                skipEmptyLines: true,
-                complete: (result) => {
-                    const users = result.data.map((row: any) => ({
-                        id: row.id,
-                        name: row.name,
-                        email: row.email,
-                        role: row.role,
-                        password: generatePassword(row.name), // Genera contraseña personalizada
-                        tasks: [],
-                    }));
-
-                    dispatch(setUsers(users));  // Almacenar los usuarios en Redux
-
-                    // Mostrar los usuarios y contraseñas en consola
-                    console.log("Usuarios cargados con contraseñas generadas:");
-                    users.forEach((user) => {
-                        console.log(`ID: ${user.id}, Nombre: ${user.name}, Email: ${user.email}, Rol: ${user.role}, Contraseña: ${user.password}`);
-                    });
-
-                    sendUsersToServer(users);   // Enviar los usuarios al servidor
-                },
-                error: (error) => {
-                    console.error('Error parsing CSV:', error);
-                },
-            });
+            sendUsersToServer(file);
+        } else {
+            console.error("No se seleccionó ningún archivo.");
         }
     };
 
-    const sendUsersToServer = async (users: User[]) => {
+    const sendUsersToServer = async (file: File) => {
+        if (!companyId) {
+            console.error("companyId no está disponible.");
+            return;
+        }
+
         setLoading(true);
         try {
-            const token = localStorage.getItem('token');  // Obtener el token desde localStorage
-            const response = await fetch(`http://localhost:4000/api/v1/auth/register/companies/${companyId}/collaborators`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`  // Asegúrate de enviar un token válido
-                },
-                body: JSON.stringify(users),
-            });
-    
+            console.log("Sending users to server");
+            const formData = new FormData();
+            formData.append("file", file);
+
+            const response = await fetch(
+                `http://localhost:4000/api/v1/auth/register/companies/${companyId}/collaborators`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                    },
+                    body: formData // Asegúrate de añadir el body
+                }
+            );
+
             if (!response.ok) {
-                throw new Error('Error al enviar los usuarios al servidor');
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Error al enviar los usuarios al servidor");
             }
-    
-            const data = await response.json();
-            console.log('Usuarios registrados con éxito:', data);
+            console.log("Se enviaron usuarios al servidor")
+
+            const blob = await response.blob();
+            console.log(blob)
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "credenciales.xlsx";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
         } catch (error) {
-            console.error('Error al enviar los usuarios al servidor:', error);
+            console.error("Error al enviar los usuarios al servidor:", error);
         } finally {
             setLoading(false);
         }
     };
-    
+
     return (
         <div>
-            <div>
-                <h1>Panel de asignación de tareas</h1>
+            <div className={Style["content-title"]}>
             </div>
-            <div>
-                <label htmlFor="upload">
-                    <span>📁</span> Cargar
+            <div className={Style["file-upload-container"]}>
+                <label htmlFor="upload" className={Style["uploadButton"]}>
+                    <span className={Style["icon"]}>📁</span> Cargar
                 </label>
                 <input
                     type="file"
                     accept=".csv"
                     onChange={handleFileUpload}
+                    className={Style["inputField"]}
                     id="upload"
                 />
-                <span>{fileName}</span>
-                <button type="button" disabled={loading}>
-                    {loading ? 'Cargando...' : 'Descargar'}
+                <span className={Style["fileName"]}>{fileName}</span>
+                <button
+                    type="button"
+                    className={Style["uploadButton"]}
+                    disabled={loading}
+                >
+                    {loading ? "Cargando..." : "Descargar"}
                 </button>
             </div>
         </div>
