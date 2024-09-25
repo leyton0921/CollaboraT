@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Style from "../styles/FileUpload.module.css";
 
 const UploadCSV = ({ companyId }: { companyId: string | null }) => {
-    const [fileName, setFileName] = useState("No hay archivos seleccionados");
+    const [fileName, setFileName] = useState("No files selected");
     const [loading, setLoading] = useState(false);
 
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -13,13 +13,13 @@ const UploadCSV = ({ companyId }: { companyId: string | null }) => {
             setFileName(file.name);
             sendUsersToServer(file);
         } else {
-            console.error("No se seleccionó ningún archivo.");
+            console.error("No file selected.");
         }
     };
 
     const sendUsersToServer = async (file: File) => {
         if (!companyId) {
-            console.error("companyId no está disponible.");
+            console.error("companyId is not available.");
             return;
         }
 
@@ -36,27 +36,27 @@ const UploadCSV = ({ companyId }: { companyId: string | null }) => {
                     headers: {
                         "Authorization": `Bearer ${localStorage.getItem("token")}`,
                     },
-                    body: formData // Asegúrate de añadir el body
+                    body: formData
                 }
             );
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.message || "Error al enviar los usuarios al servidor");
+                throw new Error(errorData.message || "Error sending users to server");
             }
-            console.log("Se enviaron usuarios al servidor")
+            console.log("Users sent to the server");
 
             const blob = await response.blob();
-            console.log(blob)
+            console.log(blob);
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = url;
-            a.download = "credenciales.xlsx";
+            a.download = "credentials.xlsx";
             document.body.appendChild(a);
             a.click();
             a.remove();
         } catch (error) {
-            console.error("Error al enviar los usuarios al servidor:", error);
+            console.error("Error sending users to server:", error);
         } finally {
             setLoading(false);
         }
@@ -68,7 +68,7 @@ const UploadCSV = ({ companyId }: { companyId: string | null }) => {
             </div>
             <div className={Style["file-upload-container"]}>
                 <label htmlFor="upload" className={Style["uploadButton"]}>
-                    <span className={Style["icon"]}>📁</span> Cargar
+                    <span className={Style["icon"]}>📁</span> Upload
                 </label>
                 <input
                     type="file"
@@ -83,7 +83,7 @@ const UploadCSV = ({ companyId }: { companyId: string | null }) => {
                     className={Style["uploadButton"]}
                     disabled={loading}
                 >
-                    {loading ? "Cargando..." : "Descargar"}
+                    {loading ? "Loading..." : "Download"}
                 </button>
             </div>
         </div>

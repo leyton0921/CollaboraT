@@ -60,7 +60,7 @@ const FormTaskManager: React.FC<FormTaskManagerProps> = ({
         >
           <option value="" disabled>Select a user</option>
           {users.map((user) => (
-            <option key={user.id} value={user.id}>{user.name}</option> // Aquí accedes a user.name
+            <option key={user.id} value={user.id}>{user.name}</option> 
           ))}
         </select>
         <select

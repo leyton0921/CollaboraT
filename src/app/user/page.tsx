@@ -1,11 +1,10 @@
 'use client';
 
-import NavbarUser from "../UI/navbar";
+import NavbarUser from "../UI/navbaruser";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
-import { useRouter } from 'next/navigation';
 
-// Definición de interfaces
+// Interface definitions
 interface Task {
   id: string;
   name: string;
@@ -21,25 +20,17 @@ interface Task {
 function Users() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
-  const projectId = '3bea95d3-31a4-4307-9e4a-055ae943ef65'; // Cambia esto por tu ID de proyecto
-  const router = useRouter();
-
-  useEffect(() => {
-    const userRole = localStorage.getItem('role');
-    if (userRole !== 'collaborator') {
-      router.push('/'); 
-    }
-  }, [router]);
+  const projectId = '3bea95d3-31a4-4307-9e4a-055ae943ef65'; // Change this to your project ID
 
   useEffect(() => {
     const fetchTasks = async () => {
       try {
         const response = await fetch(`http://localhost:4000/api/v1/tasks/projects?projectId=${projectId}`);
-        if (!response.ok) throw new Error('Error al cargar las tareas');
+        if (!response.ok) throw new Error('Error loading tasks');
 
         const data: Task[] = await response.json();
         setTasks(data);
-        saveTasksToLocalStorage(data);
+        localStorage.setItem('tasks', JSON.stringify(data)); // Save to localStorage
       } catch (error) {
         console.error(error);
       } finally {
@@ -47,7 +38,7 @@ function Users() {
       }
     };
 
-    // Cargar tareas desde localStorage si existen
+    // Retrieve tasks from localStorage if they exist
     const storedTasks = localStorage.getItem('tasks');
     if (storedTasks) {
       setTasks(JSON.parse(storedTasks));
@@ -57,8 +48,19 @@ function Users() {
     }
   }, [projectId]);
 
-  const saveTasksToLocalStorage = (tasks: Task[]) => {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
+  const updateTaskInServer = async (task: Task) => {
+    try {
+      await fetch(`http://localhost:4000/api/v1/tasks/${task.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(task),
+      });
+      localStorage.setItem('tasks', JSON.stringify(tasks)); // Update localStorage
+    } catch (error) {
+      console.error("Error updating the task:", error);
+    }
   };
 
   const handleStatusChange = (id: string, newStatus: 'pending' | 'in progress' | 'completed') => {
@@ -66,7 +68,10 @@ function Users() {
       task.id === id ? { ...task, status: newStatus } : task
     );
     setTasks(updatedTasks);
-    saveTasksToLocalStorage(updatedTasks);
+    const updatedTask = updatedTasks.find(task => task.id === id);
+    if (updatedTask) {
+      updateTaskInServer(updatedTask);
+    }
   };
 
   const handleCommentChange = (id: string, comment: string) => {
@@ -74,7 +79,11 @@ function Users() {
       task.id === id ? { ...task, comment } : task
     );
     setTasks(updatedTasks);
-    saveTasksToLocalStorage(updatedTasks);
+    const updatedTask = updatedTasks.find(task => task.id === id);
+    if (updatedTask) {
+      updateTaskInServer(updatedTask);
+    }
+    localStorage.setItem('tasks', JSON.stringify(updatedTasks)); // Update localStorage
   };
 
   const toggleCommentVisibility = (id: string) => {
@@ -82,42 +91,45 @@ function Users() {
       task.id === id ? { ...task, showComment: !task.showComment } : task
     );
     setTasks(updatedTasks);
-    saveTasksToLocalStorage(updatedTasks);
+    localStorage.setItem('tasks', JSON.stringify(updatedTasks)); // Update localStorage
   };
 
   if (loading) {
-    return <Container>Cargando tareas...</Container>;
+    return <Container>Loading tasks...</Container>;
   }
 
   return (
     <Container>
       <NavbarUser />
       <Content>
-        <h2>Todas las Tareas</h2>
+        <h2>All Tasks</h2>
         <TaskGrid>
           {tasks.map((task) => (
             <TaskCard key={task.id} status={task.status}>
               <h3>{task.name}</h3>
-              <p><strong>Descripción:</strong> {task.description}</p>
+              <p><strong>Description:</strong> {task.description}</p>
               <PriorityBadge priority={task.priority}>{task.priority}</PriorityBadge>
-              <p><strong>Fecha de Vencimiento:</strong> {task.dueDate}</p>
-              <p><strong>Estado:</strong> {task.status}</p>
-              <p><strong>Asignado a:</strong> {task.collaboratorAssignedName}</p>
+              <p><strong>Due Date:</strong> {task.dueDate}</p>
+              <p><strong>Status:</strong> {task.status}</p>
+              <p><strong>Assigned to:</strong> {task.collaboratorAssignedName}</p>
               <ToggleButton onClick={() => toggleCommentVisibility(task.id)}>
-                {task.showComment ? 'Ocultar Comentario' : 'Dejar Comentario'}
+                {task.showComment ? 'Hide Comment' : 'Leave Comment'}
               </ToggleButton>
               {task.showComment && (
                 <CommentField 
                   value={task.comment} 
                   onChange={(e) => handleCommentChange(task.id, e.target.value)} 
-                  placeholder="Deja un comentario..."
+                  placeholder="Leave a comment..."
                 />
               )}
               <SmallButton onClick={() => handleStatusChange(task.id, 'in progress')}>
-                Marcar como En Progreso
+                Mark as In Progress
               </SmallButton>
               <SmallButton onClick={() => handleStatusChange(task.id, 'completed')}>
-                Marcar como Completada
+                Mark as Completed
+              </SmallButton>
+              <SmallButton onClick={() => handleStatusChange(task.id, 'pending')}>
+                Mark as Pending
               </SmallButton>
             </TaskCard>
           ))}
@@ -129,7 +141,7 @@ function Users() {
 
 export default Users;
 
-// Estilos
+// Styles
 const Container = styled.div`
   font-family: 'Segoe UI', 'Arial', sans-serif;
   text-align: center;
@@ -142,12 +154,12 @@ const Content = styled.div`
 
 const TaskGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Tamaño mínimo adaptable */
-  gap: 20px; /* Espacio entre las tarjetas */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
   margin-top: 20px;
 
   @media (max-width: 600px) {
-    grid-template-columns: 1fr; /* Una columna en pantallas pequeñas */
+    grid-template-columns: 1fr;
   }
 `;
 

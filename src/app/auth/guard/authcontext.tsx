@@ -21,8 +21,6 @@ const withAdminGuard = (WrappedComponent: React.ComponentType) => {
           return;
         }
 
-        // Aquí deberías decodificar el token o hacer una llamada a la API
-        // para verificar si el usuario es admin. Por ahora, simularemos esto:
         const isAdmin = localStorage.getItem('role') === 'admin';
         
         if (!isAdmin) {

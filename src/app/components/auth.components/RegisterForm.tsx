@@ -22,10 +22,10 @@ const RegisterForm = () => {
     const { user, message } = await registerUser(name, email, password, nit);
 
     if (user) {
-      setWelcomeMessage('¡Registro exitoso! Redirigiendo a inicio de sesión...');
+      setWelcomeMessage('Registration successful! Redirecting to login...');
       setTimeout(() => router.push('/login'), 3000);
     } else {
-      setError(message || 'El registro falló');
+      setError(message || 'Registration failed');
     }
   };
 
@@ -38,7 +38,7 @@ const RegisterForm = () => {
   };
 
   const handleLoginRedirect = () => {
-    router.push('/login'); // Redirigir a la página de inicio de sesión
+    router.push('/login'); // Redirect to the login page
   };
 
   return (
@@ -46,13 +46,13 @@ const RegisterForm = () => {
       <Wrapper>
         <Box>
           <RegisterTab>
-            <Col>Regístrese</Col>
+            <Col>Register</Col>
           </RegisterTab>
           <form onSubmit={handleSubmit}>
             {welcomeMessage && <WelcomeMessage>{welcomeMessage}</WelcomeMessage>}
             {step === 1 && (
               <FormGroup>
-                <Label htmlFor="name">Nombre de la empresa:</Label>
+                <Label htmlFor="name">Company Name:</Label>
                 <Input
                   type="text"
                   id="name"
@@ -60,12 +60,12 @@ const RegisterForm = () => {
                   onChange={(e) => setName(e.target.value)}
                   required
                 />
-                <Button type="button" onClick={nextStep}>Siguiente</Button>
+                <Button type="button" onClick={nextStep}>Next</Button>
               </FormGroup>
             )}
             {step === 2 && (
               <FormGroup>
-                <Label htmlFor="email">Correo Electrónico:</Label>
+                <Label htmlFor="email">Email Address:</Label>
                 <Input
                   type="email"
                   id="email"
@@ -74,14 +74,14 @@ const RegisterForm = () => {
                   required
                 />
                 <ButtonGroup>
-                  <Button type="button" onClick={prevStep}>Atrás</Button>
-                  <Button type="button" onClick={nextStep}>Siguiente</Button>
+                  <Button type="button" onClick={prevStep}>Back</Button>
+                  <Button type="button" onClick={nextStep}>Next</Button>
                 </ButtonGroup>
               </FormGroup>
             )}
             {step === 3 && (
               <FormGroup>
-                <Label htmlFor="password">Contraseña:</Label>
+                <Label htmlFor="password">Password:</Label>
                 <Input
                   type="password"
                   id="password"
@@ -90,8 +90,8 @@ const RegisterForm = () => {
                   required
                 />
                 <ButtonGroup>
-                  <Button type="button" onClick={prevStep}>Atrás</Button>
-                  <Button type="button" onClick={nextStep}>Siguiente</Button>
+                  <Button type="button" onClick={prevStep}>Back</Button>
+                  <Button type="button" onClick={nextStep}>Next</Button>
                 </ButtonGroup>
               </FormGroup>
             )}
@@ -106,14 +106,14 @@ const RegisterForm = () => {
                   required
                 />
                 <ButtonGroup>
-                  <Button type="button" onClick={prevStep}>Atrás</Button>
-                  <Button type="submit">Registrar</Button>
+                  <Button type="button" onClick={prevStep}>Back</Button>
+                  <Button type="submit">Register</Button>
                 </ButtonGroup>
               </FormGroup>
             )}
             {error && <ErrorMessage>{error}</ErrorMessage>}
             <LoginLink onClick={handleLoginRedirect}>
-              Si ya está registrado, ingrese
+              If you are already registered, log in
             </LoginLink>
           </form>
         </Box>
@@ -132,7 +132,7 @@ const Background = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.301) url('/fondo collaborat.png') no-repeat center center;
+  background: rgba(255, 255, 255, 0.301) url('/background.png') no-repeat center center;
   background-size: cover;
 `;
 
@@ -186,7 +186,7 @@ const FormGroup = styled.div`
 
 const Input = styled.input`
   padding: 10px;
-  margin-top: 5px; /* Separación entre etiqueta y campo */
+  margin-top: 5px; /* Space between label and field */
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 16px;
@@ -209,7 +209,7 @@ const ButtonGroup = styled.div`
 
 const Button = styled.button`
   padding: 10px;
-  margin-top: 10px; /* Espaciado adicional entre el campo y el botón */
+  margin-top: 10px; /* Additional spacing between the field and button */
   background-color: white;
   color: ${softGreenColor};
   border: none;
