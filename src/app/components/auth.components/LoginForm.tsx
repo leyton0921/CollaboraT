@@ -27,14 +27,13 @@ const LoginForm = () => {
       localStorage.setItem('token', token);
       localStorage.setItem('role', user.role);
 
-   
       setTimeout(() => {
         if (user.role === 'company') {
           router.push('/admin'); 
         } else if (user.role === 'collaborator') {
           router.push('/user');
         } else if (user.role === 'leader') {
-          router.push('/assingTasks');
+          router.push('/assignTasks');
         } else {
           router.push('/'); 
         }
@@ -62,13 +61,13 @@ const LoginForm = () => {
       <Wrapper>
         <Box>
           <LoginTab>
-            <Col>Hola, bienvenido a Collaborat</Col>
+            <Col>Hello, welcome to Collaborat</Col>
           </LoginTab>
           <form onSubmit={handleSubmit}>
             {welcomeMessage && <WelcomeMessage>{welcomeMessage}</WelcomeMessage>}
             {step === 1 && (
               <FormGroup>
-                <Label htmlFor="email">Usuario:</Label>
+                <Label htmlFor="email">Username:</Label>
                 <Input
                   type="text"
                   id="email"
@@ -76,12 +75,12 @@ const LoginForm = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
-                <Button type="button" onClick={nextStep}>Siguiente</Button>
+                <Button type="button" onClick={nextStep}>Next</Button>
               </FormGroup>
             )}
             {step === 2 && (
               <FormGroup>
-                <Label htmlFor="password">Contraseña:</Label>
+                <Label htmlFor="password">Password:</Label>
                 <Input
                   type="password"
                   id="password"
@@ -90,8 +89,8 @@ const LoginForm = () => {
                   required
                 />
                 <ButtonGroup>
-                  <Button type="button" onClick={prevStep}>Volver</Button>
-                  <Button type="submit">Iniciar sesión</Button>
+                  <Button type="button" onClick={prevStep}>Back</Button>
+                  <Button type="submit">Log in</Button>
                 </ButtonGroup>
               </FormGroup>
             )}
@@ -102,7 +101,7 @@ const LoginForm = () => {
               </LoadingContainer>
             )}
             <RegisterLink onClick={handleRegisterRedirect}>
-              Si es una empresa, regístrese
+              If you are a company, register here
             </RegisterLink>
           </form>
         </Box>
@@ -112,7 +111,6 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
-
 // Styled Components
 const softGreenColor = '#00c767';
 const lighterGreenColor = '#00e080';
