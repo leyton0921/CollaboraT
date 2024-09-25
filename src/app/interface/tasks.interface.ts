@@ -9,13 +9,13 @@ export default interface FormTaskManagerProps {
   setTaskPriority: React.Dispatch<React.SetStateAction<string>>;
   selectedRole: string;
   setSelectedRole: React.Dispatch<React.SetStateAction<string>>;
-  status?: string; // Opcional
-  setStatus?: React.Dispatch<React.SetStateAction<string>>; // Opcional
+  status?: string; 
+  setStatus?: React.Dispatch<React.SetStateAction<string>>;
   selectedUserId: number | null;
   setSelectedUserId: React.Dispatch<React.SetStateAction<number | null>>;
   loading: boolean;
-  error: string | null; // Cambiado a string | null
+  error: string | null; 
   handleAddTask: () => void;
-  users: { id: number; name: string }[]; // Esta es la estructura correcta para los usuarios
+  users: { id: number; name: string }[]; 
   onClose?: () => void;  
 }
