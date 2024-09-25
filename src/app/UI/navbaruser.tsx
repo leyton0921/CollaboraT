@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 
 const NavbarUser = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -29,7 +28,10 @@ const NavbarUser = () => {
       </ToggleButton>
       <Menu open={isMenuOpen}>
         <Link href="/user" passHref>
-          <MenuItem>Admin Panel</MenuItem>
+          <MenuItem>My Tasks</MenuItem>
+        </Link>
+        <Link href="/taskunassign" passHref>
+          <MenuItem>Unassigned Tasks</MenuItem>
         </Link>
         <Link href="#" passHref>
           <MenuItem>Profile</MenuItem>

@@ -2,9 +2,11 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Task }  from './tasksSlice';
 
 export interface User {
-  id: number;
+  id: string;
   name: string;
+  email:string;
   role: string;
+  password: string;
   tasks: Task[]; 
 }
 

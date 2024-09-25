@@ -5,7 +5,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: "CollaboraT",
-  description: "Encuentra rápidamente clínicas cercanas a tu ubicación basadas en tu EPS, que pueden atenderte en caso de urgencia.",
+  description: "",
 };
 export default function RootLayout({
   children,
