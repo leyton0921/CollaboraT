@@ -14,59 +14,47 @@ const LoginForm = () => {
   const router = useRouter(); 
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // Prevent the default form submission behavior.
-    setWelcomeMessage(null); // Clear any previous welcome message.
-    setError(null); // Clear any previous error messages.
-    setLoading(true); // Set loading state to true while processing.
+    e.preventDefault();
+    setWelcomeMessage(null);
+    setError(null);
+    setLoading(true);
 
-    // Call the authenticateUser function with email and password.
     const result = await authenticateUser(email, password);
 
-    // Check if the authentication was successful.
     if (result) {
-
-      const { user, token } = result; // Destructure user and token from the result.
-      setWelcomeMessage(`Hello, welcome to Collaborat, ${user.name}!`); // Set welcome message with the user's name.
-      localStorage.setItem('token', token); // Store the token in local storage.
-      console.log('user:', user); // Log the user object for debugging.
-
-      // Redirect to the admin page after 3 seconds.
-
       const { user, token } = result;
       setWelcomeMessage(`Hello, welcome to Collaborat, ${user.name}!`); 
       localStorage.setItem('token', token);
       localStorage.setItem('role', user.role);
 
-
+   
       setTimeout(() => {
         if (user.role === 'company') {
           router.push('/admin'); 
         } else if (user.role === 'collaborator') {
           router.push('/user');
+        } else if (user.role === 'leader') {
+          router.push('/assingTasks');
         } else {
           router.push('/'); 
         }
       }, 3000);
     } else {
-      // If authentication failed, set an error message.
       setError('Login failed: Invalid email or password');
-      setLoading(false); // Set loading to false since the process is complete.
+      setLoading(false);
     }
   };
 
-  // Function to go to the next step in a multi-step process.
   const nextStep = () => {
-    setStep((prevStep) => Math.min(prevStep + 1, 2)); // Increment step, but limit to 2.
+    setStep((prevStep) => Math.min(prevStep + 1, 2));
   };
 
-  // Function to go back to the previous step in a multi-step process.
   const prevStep = () => {
-    setStep((prevStep) => Math.max(prevStep - 1, 1)); // Decrement step, but not below 1.
+    setStep((prevStep) => Math.max(prevStep - 1, 1));
   };
 
-  // Function to redirect to the registration page.
   const handleRegisterRedirect = () => {
-    router.push('/register'); // Redirect to the registration page.
+    router.push('/register');
   };
 
   return (
@@ -74,13 +62,13 @@ const LoginForm = () => {
       <Wrapper>
         <Box>
           <LoginTab>
-            <Col>Hello, welcome to Collaborat</Col>
+            <Col>Hola, bienvenido a Collaborat</Col>
           </LoginTab>
           <form onSubmit={handleSubmit}>
             {welcomeMessage && <WelcomeMessage>{welcomeMessage}</WelcomeMessage>}
             {step === 1 && (
               <FormGroup>
-                <Label htmlFor="email">User:</Label>
+                <Label htmlFor="email">Usuario:</Label>
                 <Input
                   type="text"
                   id="email"
@@ -88,12 +76,12 @@ const LoginForm = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
-                <Button type="button" onClick={nextStep}>Next</Button>
+                <Button type="button" onClick={nextStep}>Siguiente</Button>
               </FormGroup>
             )}
             {step === 2 && (
               <FormGroup>
-                <Label htmlFor="password">Password:</Label>
+                <Label htmlFor="password">Contraseña:</Label>
                 <Input
                   type="password"
                   id="password"
@@ -102,8 +90,8 @@ const LoginForm = () => {
                   required
                 />
                 <ButtonGroup>
-                  <Button type="button" onClick={prevStep}>Back</Button>
-                  <Button type="submit">Log In</Button>
+                  <Button type="button" onClick={prevStep}>Volver</Button>
+                  <Button type="submit">Iniciar sesión</Button>
                 </ButtonGroup>
               </FormGroup>
             )}
@@ -114,7 +102,7 @@ const LoginForm = () => {
               </LoadingContainer>
             )}
             <RegisterLink onClick={handleRegisterRedirect}>
-              If you are a company, register here
+              Si es una empresa, regístrese
             </RegisterLink>
           </form>
         </Box>
@@ -135,7 +123,7 @@ const Background = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.301) url('/background.png') no-repeat center center;
+  background: rgba(255, 255, 255, 0.301) url('/fondo collaborat.png') no-repeat center center;
   background-size: cover;
 `;
 
@@ -189,7 +177,7 @@ const FormGroup = styled.div`
 
 const Input = styled.input`
   padding: 10px;
-  margin-top: 5px; /* Space between label and field */
+  margin-top: 5px; /* Separación entre etiqueta y campo */
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 16px;
@@ -212,7 +200,7 @@ const ButtonGroup = styled.div`
 
 const Button = styled.button`
   padding: 10px;
-  margin-top: 10px; /* Additional spacing between the field and the button */
+  margin-top: 10px; /* Espaciado adicional entre el campo y el botón */
   background-color: white;
   color: ${softGreenColor};
   border: none;
