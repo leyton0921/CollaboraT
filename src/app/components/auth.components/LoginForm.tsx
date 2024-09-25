@@ -33,6 +33,8 @@ const LoginForm = () => {
           router.push('/admin'); 
         } else if (user.role === 'collaborator') {
           router.push('/user');
+        } else if (user.role === 'leader') {
+          router.push('/assingTasks');
         } else {
           router.push('/'); 
         }
