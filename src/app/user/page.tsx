@@ -3,6 +3,9 @@
 import NavbarUser from "../UI/navbaruser";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
+import { useRouter } from 'next/navigation';
+import Spinner from "../UI/Spiner/spiner";
+
 
 // Interface definitions
 interface Task {
@@ -21,6 +24,20 @@ function Users() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const projectId = '3bea95d3-31a4-4307-9e4a-055ae943ef65'; // Change this to your project ID
+
+  const router = useRouter(); 
+  const role = localStorage.getItem('role');
+  const id = localStorage.getItem('id');
+
+  useEffect(() => {
+    if (role !== 'collaborator') {
+      router.push("/"); 
+    }
+  }, [role, router]);
+
+  if (role !== 'collaborator') {
+    return <Spinner />;
+  }
 
   useEffect(() => {
     const fetchTasks = async () => {
