@@ -1,34 +1,39 @@
-// HomeAdmin.tsx
 "use client";
-import UploadCSV from '../components/UploadCSV';
-import UserTable from '../components/UserTable';
-import { useEffect } from 'react';
-import Navbar from '../UI/navbar';
+import { useEffect, useState } from 'react';
+import NavBArLEader from '../UI/navBarLader';
 import { useRouter } from 'next/navigation';
 import Spinner from '../UI/Spiner/spiner';
+import UserTable from '../components/UserTable';
 
-const HomeAdmin = () => {
-  // const router = useRouter();
+const HomeLeader = () => {
+  const router = useRouter();
   const role = localStorage.getItem('role');
-  const id = localStorage.getItem('id');
+  const [companyId, setCompanyId] = useState<string | null>(null);
 
   // useEffect(() => {
   //   if (role !== 'company') {
   //     router.push("/");
+  //   } else {
+  //     // Obtener el companyId del localStorage o desde la API
+  //     const storedCompanyId = localStorage.getItem('companyId'); // Asegúrate de que esté guardado
+  //     if (storedCompanyId) {
+  //       setCompanyId(storedCompanyId);
+  //     } else {
+  //       // Opcional: podrías hacer una llamada a la API para obtenerlo aquí
+  //     }
   //   }
   // }, [role, router]);
 
-  // if (role !== 'company') {
+  // if (role !== 'company' || companyId === null) {
   //   return <Spinner />;
   // }
 
   return (
     <div>
-      <Navbar />
-      <UploadCSV companyId={id} />
+      <NavBArLEader />
       <UserTable />
     </div>
   );
 }
 
-export default HomeAdmin;
+export default HomeLeader;

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 
- const NavbarUser = () => {
+ const NavBArLEader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -30,7 +30,7 @@ import { useRouter } from 'next/navigation';
       </ToggleButton>
       <Menu open={isMenuOpen}>
         <Link href="/admin" passHref>
-          <MenuItem>Panel administrador</MenuItem>
+          <MenuItem>Panel Leader</MenuItem>
         </Link>
         <Link href="/assignTasks" passHref>
           <MenuItem>Asignar tareas</MenuItem>
@@ -46,7 +46,7 @@ import { useRouter } from 'next/navigation';
     </Nav>
   );
 };
-export default NavbarUser 
+export default NavBArLEader 
 // Styled Components
 const Nav = styled.nav`
   display: flex;
