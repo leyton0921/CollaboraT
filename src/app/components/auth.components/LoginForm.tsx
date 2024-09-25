@@ -14,18 +14,29 @@ const LoginForm = () => {
   const router = useRouter(); 
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setWelcomeMessage(null);
-    setError(null);
-    setLoading(true);
+    e.preventDefault(); // Prevent the default form submission behavior.
+    setWelcomeMessage(null); // Clear any previous welcome message.
+    setError(null); // Clear any previous error messages.
+    setLoading(true); // Set loading state to true while processing.
 
+    // Call the authenticateUser function with email and password.
     const result = await authenticateUser(email, password);
 
+    // Check if the authentication was successful.
     if (result) {
+
+      const { user, token } = result; // Destructure user and token from the result.
+      setWelcomeMessage(`Hello, welcome to Collaborat, ${user.name}!`); // Set welcome message with the user's name.
+      localStorage.setItem('token', token); // Store the token in local storage.
+      console.log('user:', user); // Log the user object for debugging.
+
+      // Redirect to the admin page after 3 seconds.
+
       const { user, token } = result;
       setWelcomeMessage(`Hello, welcome to Collaborat, ${user.name}!`); 
       localStorage.setItem('token', token);
       localStorage.setItem('role', user.role);
+
 
       setTimeout(() => {
         if (user.role === 'company') {
@@ -37,21 +48,25 @@ const LoginForm = () => {
         }
       }, 3000);
     } else {
+      // If authentication failed, set an error message.
       setError('Login failed: Invalid email or password');
-      setLoading(false);
+      setLoading(false); // Set loading to false since the process is complete.
     }
   };
 
+  // Function to go to the next step in a multi-step process.
   const nextStep = () => {
-    setStep((prevStep) => Math.min(prevStep + 1, 2));
+    setStep((prevStep) => Math.min(prevStep + 1, 2)); // Increment step, but limit to 2.
   };
 
+  // Function to go back to the previous step in a multi-step process.
   const prevStep = () => {
-    setStep((prevStep) => Math.max(prevStep - 1, 1));
+    setStep((prevStep) => Math.max(prevStep - 1, 1)); // Decrement step, but not below 1.
   };
 
+  // Function to redirect to the registration page.
   const handleRegisterRedirect = () => {
-    router.push('/register');
+    router.push('/register'); // Redirect to the registration page.
   };
 
   return (
