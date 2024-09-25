@@ -13,12 +13,11 @@ export const authenticateUser = async (email: string, password: string): Promise
     const data = await response.json();
 
     if (response.ok) {
-      // Si la respuesta es exitosa, retorna el usuario y el token
       const { user, access_token } = data; 
       localStorage.setItem('name', user.name); 
       localStorage.setItem('token', access_token);
       localStorage.setItem('role', user.role);
-      localStorage.setItem('id',user.id)
+      localStorage.setItem('id', user.id);
       return { user, token: access_token }; 
     } else {
       return null;

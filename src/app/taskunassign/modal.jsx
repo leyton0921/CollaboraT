@@ -6,11 +6,11 @@ const Modal = ({ isOpen, onClose, onConfirm }) => {
   return (
     <Overlay>
       <ModalContainer>
-        <h2>Confirmación</h2>
-        <p>¿Estás seguro de que quieres desasignar esta tarea?</p>
+        <h2>Confirmation</h2>
+        <p>Are you sure you want to unassign this task?</p>
         <ButtonContainer>
-          <Button onClick={onClose}>Cancelar</Button>
-          <Button onClick={onConfirm}>Confirmar</Button>
+          <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={onConfirm}>Confirm</Button>
         </ButtonContainer>
       </ModalContainer>
     </Overlay>

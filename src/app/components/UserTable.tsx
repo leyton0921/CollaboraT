@@ -33,12 +33,12 @@ const UserTable = () => {
       );
 
       if (!response.ok) {
-        throw new Error('Error al cargar los usuarios');
+        throw new Error('Error loading users');
       }
       const data = await response.json();
       setUsers(data);
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Error desconocido');
+      setError(error instanceof Error ? error.message : 'Unknown error');
     } finally {
       setLoading(false);
     }
@@ -49,7 +49,7 @@ const UserTable = () => {
   }, []);
 
   const handleAddTask = () => {
-    console.log('Tarea añadida:', {
+    console.log('Task added:', {
       taskName,
       taskDescription,
       dueDate,
@@ -89,13 +89,13 @@ const UserTable = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Error al eliminar el usuario');
+        throw new Error('Error deleting user');
       }
 
       setUsers(prevUsers => prevUsers.filter(user => user.id !== userToDelete));
       setShowDeleteConfirm(false);
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Error desconocido');
+      setError(error instanceof Error ? error.message : 'Unknown error');
     } finally {
       setLoading(false);
     }
@@ -126,7 +126,7 @@ const UserTable = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Error al cambiar el rol');
+        throw new Error('Error changing role');
       }
 
       setUsers(prevUsers =>
@@ -136,7 +136,7 @@ const UserTable = () => {
       );
       setShowRoleForm(false);
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Error desconocido');
+      setError(error instanceof Error ? error.message : 'Unknown error');
     } finally {
       setLoading(false);
     }
@@ -146,22 +146,22 @@ const UserTable = () => {
     <div className={styles.container}>
       {showDeleteConfirm && (
         <div className={styles.confirmationBanner}>
-          <p>¿Estás seguro de que deseas eliminar este usuario?</p>
-          <button onClick={handleDeleteUser}>Sí</button>
+          <p>Are you sure you want to delete this user?</p>
+          <button onClick={handleDeleteUser}>Yes</button>
           <button onClick={cancelDeleteUser}>No</button>
         </div>
       )}
 
       {showRoleForm && selectedUser && (
         <div className={styles.roleForm}>
-          <h3>Cambiar rol de {selectedUser.name}</h3>
+          <h3>Change role of {selectedUser.name}</h3>
           <select value={selectedRole} onChange={e => setSelectedRole(e.target.value)}>
-            <option value="" disabled>Selecciona un rol</option>
+            <option value="" disabled>Select a role</option>
             <option value="leader">Leader</option>
             <option value="collaborator">Collaborator</option>
           </select>
-          <button onClick={handleChangeRole}>Guardar</button>
-          <button onClick={handleCloseForm}>Cancelar</button>
+          <button onClick={handleChangeRole}>Save</button>
+          <button onClick={handleCloseForm}>Cancel</button>
         </div>
       )}
 
@@ -188,14 +188,14 @@ const UserTable = () => {
           onClose={handleCloseForm}
         />
       )}
-      {loading && <p>Cargando usuarios...</p>}
+      {loading && <p>Loading users...</p>}
       {error && <p className={styles.error}>{error}</p>}
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>Nombre</th>
-            <th>Rol</th>
-            <th>Acciones</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -213,7 +213,7 @@ const UserTable = () => {
                   className={styles.assignButton}
                   onClick={() => handleAssignRoleClick(user)}
                 >
-                  Cambiar Rol
+                  Change Role
                 </button>
                 <button
                   className={styles.assignButton}
