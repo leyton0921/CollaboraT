@@ -1,32 +1,34 @@
-'use client'
-import TaskManager from '../components/TaskManager';
-import { useState, useEffect } from 'react';
-import { Navbar } from '../UI/navbar';
+// HomeAdmin.tsx
+"use client";
+import UploadCSV from '../components/UploadCSV';
+import UserTable from '../components/UserTable';
+import { useEffect } from 'react';
+import Navbar from '../UI/navbar';
 import { useRouter } from 'next/navigation';
+import Spinner from '../UI/Spiner/spiner';
 
-export default function AssignTasks() {
-  const [isAdmin, setIsAdmin] = useState(true);  // Cambiar a false para la vista de usuario
-  const router = useRouter();
-  
-  const links = [
-    { href: "/assignTask", name: "Assign Tasks" },
-    { href: "/admin", name: "Home Admin" }  
-  ];
+const HomeAdmin = () => {
+  // const router = useRouter();
+  const role = localStorage.getItem('role');
+  const id = localStorage.getItem('id');
 
-  useEffect(() => {
-    if (!isAdmin) {
-      router.push('/user'); 
-    }
-  }, [isAdmin, router]);
+  // useEffect(() => {
+  //   if (role !== 'company') {
+  //     router.push("/");
+  //   }
+  // }, [role, router]);
 
-  if (!isAdmin) {
-    return <p>Redirecting...</p>;
-  }
+  // if (role !== 'company') {
+  //   return <Spinner />;
+  // }
 
   return (
     <div>
-      <Navbar links={links} />
-      <TaskManager />
+      <Navbar />
+      <UploadCSV companyId={id} />
+      <UserTable />
     </div>
   );
 }
+
+export default HomeAdmin;

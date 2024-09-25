@@ -26,7 +26,9 @@ const withAdminGuard = (WrappedComponent: React.ComponentType) => {
           return; // Stop the function here.
         }
 
+
         // Check if the user has an admin role (this is a simulation).
+
         const isAdmin = localStorage.getItem('role') === 'admin';
         
         if (!isAdmin) {

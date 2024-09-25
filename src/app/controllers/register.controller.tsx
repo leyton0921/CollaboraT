@@ -12,6 +12,20 @@ export const registerUser = async (
       method: 'POST', // Use POST method for registration.
       headers: { 'Content-Type': 'application/json' }, // Set the content type to JSON.
       body: JSON.stringify({ name, email, password, nit }), // Convert the data to JSON format.
+
+export const registerUser = async (
+  name: string,
+  email: string,
+  password: string,
+  nit: string,
+  id: number
+): Promise<{ user: IUserCompanies | null; message: string }> => {
+  try {
+    const response = await fetch('http://localhost:4000/api/v1/auth/register/companies', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password, nit, id }),
+
     });
 
     // Parse the response data.

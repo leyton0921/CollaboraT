@@ -24,14 +24,28 @@ const LoginForm = () => {
 
     // Check if the authentication was successful.
     if (result) {
+
       const { user, token } = result; // Destructure user and token from the result.
       setWelcomeMessage(`Hello, welcome to Collaborat, ${user.name}!`); // Set welcome message with the user's name.
       localStorage.setItem('token', token); // Store the token in local storage.
       console.log('user:', user); // Log the user object for debugging.
 
       // Redirect to the admin page after 3 seconds.
+
+      const { user, token } = result;
+      setWelcomeMessage(`Hello, welcome to Collaborat, ${user.name}!`); 
+      localStorage.setItem('token', token);
+      localStorage.setItem('role', user.role);
+
+
       setTimeout(() => {
-        router.push('/admin');
+        if (user.role === 'company') {
+          router.push('/admin'); 
+        } else if (user.role === 'collaborator') {
+          router.push('/user');
+        } else {
+          router.push('/'); 
+        }
       }, 3000);
     } else {
       // If authentication failed, set an error message.
@@ -60,13 +74,13 @@ const LoginForm = () => {
       <Wrapper>
         <Box>
           <LoginTab>
-            <Col>Hola, bienvenido a Collaborat</Col>
+            <Col>Hello, welcome to Collaborat</Col>
           </LoginTab>
           <form onSubmit={handleSubmit}>
             {welcomeMessage && <WelcomeMessage>{welcomeMessage}</WelcomeMessage>}
             {step === 1 && (
               <FormGroup>
-                <Label htmlFor="email">Usuario:</Label>
+                <Label htmlFor="email">User:</Label>
                 <Input
                   type="text"
                   id="email"
@@ -74,12 +88,12 @@ const LoginForm = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
-                <Button type="button" onClick={nextStep}>Siguiente</Button>
+                <Button type="button" onClick={nextStep}>Next</Button>
               </FormGroup>
             )}
             {step === 2 && (
               <FormGroup>
-                <Label htmlFor="password">Contraseña:</Label>
+                <Label htmlFor="password">Password:</Label>
                 <Input
                   type="password"
                   id="password"
@@ -88,8 +102,8 @@ const LoginForm = () => {
                   required
                 />
                 <ButtonGroup>
-                  <Button type="button" onClick={prevStep}>Volver</Button>
-                  <Button type="submit">Iniciar sesión</Button>
+                  <Button type="button" onClick={prevStep}>Back</Button>
+                  <Button type="submit">Log In</Button>
                 </ButtonGroup>
               </FormGroup>
             )}
@@ -100,7 +114,7 @@ const LoginForm = () => {
               </LoadingContainer>
             )}
             <RegisterLink onClick={handleRegisterRedirect}>
-              Si es una empresa, regístrese
+              If you are a company, register here
             </RegisterLink>
           </form>
         </Box>
@@ -108,6 +122,8 @@ const LoginForm = () => {
     </Background>
   );
 };
+
+export default LoginForm;
 
 // Styled Components
 const softGreenColor = '#00c767';
@@ -119,7 +135,7 @@ const Background = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.301) url('/fondo collaborat.png') no-repeat center center;
+  background: rgba(255, 255, 255, 0.301) url('/background.png') no-repeat center center;
   background-size: cover;
 `;
 
@@ -173,7 +189,7 @@ const FormGroup = styled.div`
 
 const Input = styled.input`
   padding: 10px;
-  margin-top: 5px; /* Separación entre etiqueta y campo */
+  margin-top: 5px; /* Space between label and field */
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 16px;
@@ -196,7 +212,7 @@ const ButtonGroup = styled.div`
 
 const Button = styled.button`
   padding: 10px;
-  margin-top: 10px; /* Espaciado adicional entre el campo y el botón */
+  margin-top: 10px; /* Additional spacing between the field and the button */
   background-color: white;
   color: ${softGreenColor};
   border: none;
@@ -246,5 +262,3 @@ const RegisterLink = styled.p`
     text-decoration: underline;
   }
 `;
-
-export default LoginForm;

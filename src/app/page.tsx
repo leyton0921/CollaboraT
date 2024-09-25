@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components'; 
 import Link from 'next/link'; 
 
-// Colores en tonos de verde 
+// Colors in shades of green 
 const primaryGreen = '#00A64E'; 
 const secondaryGreen = '#008f44'; 
 const lightGreen = '#e8f5e9'; 
@@ -17,9 +17,9 @@ const Container = styled.div`
   color: ${darkGreen}; 
   display: flex; 
   flex-direction: column; 
-  margin: 0; // Elimina márgenes del contenedor
-  padding: 0; // Elimina paddings del contenedor
-  overflow-x: hidden; // Evita el desbordamiento horizontal
+  margin: 0; 
+  padding: 0; 
+  overflow-x: hidden; 
 `; 
 
 const Header = styled.header` 
@@ -78,7 +78,7 @@ const Nav = styled.nav`
   background-color: white; 
   border: 1px solid ${secondaryGreen}; 
   padding: 15px; 
-  display: ${props => props.isVisible ? 'flex' : 'none'}; 
+  display: ${props => (props.isVisible ? 'flex' : 'none')}; 
   flex-direction: column; 
   border-radius: 10px; 
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1); 
@@ -279,7 +279,7 @@ const HomePage = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(false); 
 
   const toggleMenu = () => { 
-    setIsMenuVisible(!isMenuVisible); 
+    setIsMenuVisible(prev => !prev); 
   }; 
 
   return ( 
@@ -296,13 +296,13 @@ const HomePage = () => {
       <Nav isVisible={isMenuVisible}> 
         <NavList> 
           <li> 
-            <NavLink href="#about">Quiénes Somos</NavLink> 
+            <NavLink href="#about">Who We Are</NavLink> 
           </li> 
           <li> 
-            <NavLink href="#features">Lo que Buscamos</NavLink> 
+            <NavLink href="#features">What We Seek</NavLink> 
           </li> 
           <li> 
-            <NavButton href="/register">Registro</NavButton> 
+            <NavButton href="/register">Register</NavButton> 
           </li> 
           <li> 
             <NavButton href="/login">Login</NavButton> 
@@ -312,38 +312,38 @@ const HomePage = () => {
 
       <Hero> 
         <HeroContent> 
-          <HeroTitle>Organiza y Optimiza tu Colaboración con Facilidad</HeroTitle> 
-          <HeroSubtitle>Collaborat: La herramienta perfecta para que tu equipo esté en sintonía y al tanto de cada tarea.</HeroSubtitle> 
+          <HeroTitle>Organize and Optimize Your Collaboration with Ease</HeroTitle> 
+          <HeroSubtitle>Collaborat: The perfect tool for your team to stay in sync and on top of every task.</HeroSubtitle> 
           <HeroButtons> 
             <Link href="/register" passHref> 
-              <HeroButton>Soy Empresa</HeroButton> 
+              <HeroButton>I Am a Company</HeroButton> 
             </Link> 
             <Link href="/login" passHref> 
-              <SecondaryButton>Soy Colaborador</SecondaryButton> 
+              <SecondaryButton>I Am a Collaborator</SecondaryButton> 
             </Link> 
           </HeroButtons> 
         </HeroContent> 
       </Hero> 
 
       <About id="about"> 
-        <SectionTitle>Quiénes Somos</SectionTitle> 
-        <p>En Collaborat, nos dedicamos a mejorar la eficiencia de tu equipo mediante una plataforma de gestión de tareas simple y efectiva.</p> 
+        <SectionTitle>Who We Are</SectionTitle> 
+        <p>At Collaborat, we focus on improving your team's efficiency through a simple and effective task management platform.</p> 
       </About> 
 
       <Features id="features"> 
-        <SectionTitle>Lo que Buscamos</SectionTitle> 
+        <SectionTitle>What We Seek</SectionTitle> 
         <FeatureList> 
           <Feature> 
-            <FeatureTitle>Gestión de Tareas</FeatureTitle> 
-            <p>Organiza las tareas de tu equipo con facilidad y claridad.</p> 
+            <FeatureTitle>Task Management</FeatureTitle> 
+            <p>Easily and clearly organize your team's tasks.</p> 
           </Feature> 
           <Feature> 
-            <FeatureTitle>Seguimiento en Tiempo Real</FeatureTitle> 
-            <p>Sigue el progreso de cada tarea y proyecto en tiempo real.</p> 
+            <FeatureTitle>Real-Time Tracking</FeatureTitle> 
+            <p>Monitor the progress of every task and project in real-time.</p> 
           </Feature> 
           <Feature> 
-            <FeatureTitle>Colaboración Efectiva</FeatureTitle> 
-            <p>Facilita la comunicación y la colaboración entre los miembros del equipo.</p> 
+            <FeatureTitle>Effective Collaboration</FeatureTitle> 
+            <p>Facilitate communication and collaboration among team members.</p> 
           </Feature> 
         </FeatureList> 
       </Features> 
@@ -351,13 +351,13 @@ const HomePage = () => {
       <Footer> 
         <FooterList> 
           <li> 
-            <FooterLink href="#about">Quiénes Somos</FooterLink> 
+            <FooterLink href="#about">Who We Are</FooterLink> 
           </li> 
           <li> 
-            <FooterLink href="#features">Lo que Buscamos</FooterLink> 
+            <FooterLink href="#features">What We Seek</FooterLink> 
           </li> 
           <li> 
-            <FooterLink href="/privacy-policy">Todos los derechos reservados</FooterLink> 
+            <FooterLink href="/privacy-policy">All rights reserved</FooterLink> 
           </li> 
           <li> 
             <FooterLink href="/terms-of-service">©</FooterLink> 
@@ -368,4 +368,4 @@ const HomePage = () => {
   ); 
 }; 
 
-export default HomePage;
+export default HomePage; 

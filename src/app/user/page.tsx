@@ -1,10 +1,10 @@
 'use client';
 
-import { Navbar } from "../UI/navbaruser";
+import NavbarUser from "../UI/navbaruser";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 
-// Definición de interfaces
+// Interface definitions
 interface Task {
   id: string;
   name: string;
@@ -17,130 +17,50 @@ interface Task {
   collaboratorAssignedName: string;
 }
 
-export default function Users() {
-  const links = [
-    { href: "/user", name: "Mis Tareas" },
-    { href: "/taskunassign", name: "Tareas Sin Asignar" },
-    { href: "/profile", name: "Perfil" },
-    { href: "/", name: "Salir" },
-  ];
-
-  const collaboratorName = 'Juan Pérez';
-
-  const initialTasks: Task[] = [
-    {
-      id: '1',
-      name: 'Actualizar la base de datos',
-      description: 'Revisar y actualizar la base de datos del sistema.',
-      priority: 'high',
-      dueDate: '2024-09-30',
-      status: 'in progress',
-      comment: '',
-      collaboratorAssignedName: collaboratorName
-    },
-    {
-      id: '2',
-      name: 'Revisión de código',
-      description: 'Hacer revisión de código del último sprint.',
-      priority: 'medium',
-      dueDate: '2024-10-01',
-      status: 'pending',
-      comment: '',
-      collaboratorAssignedName: collaboratorName
-    },
-    {
-      id: '3',
-      name: 'Reunión con cliente',
-      description: 'Reunirse con el cliente para revisión del proyecto.',
-      priority: 'low',
-      dueDate: '2024-10-05',
-      status: 'completed',
-      comment: 'Revisado y aprobado por el cliente.',
-      collaboratorAssignedName: collaboratorName
-    },
-    {
-      id: '4',
-      name: 'Enviar informe final',
-      description: 'Preparar y enviar el informe final al cliente.',
-      priority: 'medium',
-      dueDate: '2024-10-10',
-      status: 'pending',
-      comment: '',
-      collaboratorAssignedName: collaboratorName
-    },
-    {
-      id: '5',
-      name: 'Realizar pruebas unitarias',
-      description: 'Ejecutar pruebas unitarias en el módulo de autenticación.',
-      priority: 'high',
-      dueDate: '2024-10-15',
-      status: 'in progress',
-      comment: '',
-      collaboratorAssignedName: collaboratorName
-    },
-    {
-      id: '6',
-      name: 'Actualizar documentación',
-      description: 'Asegurarse de que toda la documentación esté actualizada.',
-      priority: 'low',
-      dueDate: '2024-10-20',
-      status: 'completed',
-      comment: 'Documentación actualizada.',
-      collaboratorAssignedName: collaboratorName
-    },
-    {
-      id: '7',
-      name: 'Revisar requisitos del cliente',
-      description: 'Revisar los requisitos con el cliente antes de la entrega.',
-      priority: 'medium',
-      dueDate: '2024-10-25',
-      status: 'pending',
-      comment: '',
-      collaboratorAssignedName: collaboratorName
-    },
-    {
-      id: '8',
-      name: 'Planificar próximo sprint',
-      description: 'Definir los objetivos para el próximo sprint.',
-      priority: 'high',
-      dueDate: '2024-10-30',
-      status: 'in progress',
-      comment: '',
-      collaboratorAssignedName: collaboratorName
-    },
-    {
-      id: '9',
-      name: 'Configurar servidor de producción',
-      description: 'Asegurarse de que el servidor de producción esté configurado correctamente.',
-      priority: 'low',
-      dueDate: '2024-11-01',
-      status: 'completed',
-      comment: 'Servidor configurado correctamente.',
-      collaboratorAssignedName: collaboratorName
-    },
-    {
-      id: '10',
-      name: 'Hacer revisión final',
-      description: 'Revisar todo el proyecto antes de la entrega final.',
-      priority: 'high',
-      dueDate: '2024-11-05',
-      status: 'pending',
-      comment: '',
-      collaboratorAssignedName: collaboratorName
-    }
-  ];
-
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+function Users() {
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState(true);
+  const projectId = '3bea95d3-31a4-4307-9e4a-055ae943ef65'; // Change this to your project ID
 
   useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await fetch(`http://localhost:4000/api/v1/tasks/projects?projectId=${projectId}`);
+        if (!response.ok) throw new Error('Error loading tasks');
+
+        const data: Task[] = await response.json();
+        setTasks(data);
+        localStorage.setItem('tasks', JSON.stringify(data)); // Save to localStorage
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Retrieve tasks from localStorage if they exist
     const storedTasks = localStorage.getItem('tasks');
     if (storedTasks) {
       setTasks(JSON.parse(storedTasks));
+      setLoading(false);
+    } else {
+      fetchTasks();
     }
-  }, []);
+  }, [projectId]);
 
-  const saveTasksToLocalStorage = (tasks: Task[]) => {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
+  const updateTaskInServer = async (task: Task) => {
+    try {
+      await fetch(`http://localhost:4000/api/v1/tasks/${task.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(task),
+      });
+      localStorage.setItem('tasks', JSON.stringify(tasks)); // Update localStorage
+    } catch (error) {
+      console.error("Error updating the task:", error);
+    }
   };
 
   const handleStatusChange = (id: string, newStatus: 'pending' | 'in progress' | 'completed') => {
@@ -148,7 +68,10 @@ export default function Users() {
       task.id === id ? { ...task, status: newStatus } : task
     );
     setTasks(updatedTasks);
-    saveTasksToLocalStorage(updatedTasks);
+    const updatedTask = updatedTasks.find(task => task.id === id);
+    if (updatedTask) {
+      updateTaskInServer(updatedTask);
+    }
   };
 
   const handleCommentChange = (id: string, comment: string) => {
@@ -156,7 +79,11 @@ export default function Users() {
       task.id === id ? { ...task, comment } : task
     );
     setTasks(updatedTasks);
-    saveTasksToLocalStorage(updatedTasks);
+    const updatedTask = updatedTasks.find(task => task.id === id);
+    if (updatedTask) {
+      updateTaskInServer(updatedTask);
+    }
+    localStorage.setItem('tasks', JSON.stringify(updatedTasks)); // Update localStorage
   };
 
   const toggleCommentVisibility = (id: string) => {
@@ -164,98 +91,57 @@ export default function Users() {
       task.id === id ? { ...task, showComment: !task.showComment } : task
     );
     setTasks(updatedTasks);
-    saveTasksToLocalStorage(updatedTasks);
+    localStorage.setItem('tasks', JSON.stringify(updatedTasks)); // Update localStorage
   };
+
+  if (loading) {
+    return <Container>Loading tasks...</Container>;
+  }
 
   return (
     <Container>
-      <Navbar links={links} />
+      <NavbarUser />
       <Content>
-        <TaskColumns>
-          <Column>
-            <h2>Tareas Pendientes</h2>
-            {tasks.filter(task => task.status === 'pending').map((task) => (
-              <TaskCard key={task.id} status={task.status}>
-                <h3>{task.name}</h3>
-                <p><strong>Descripción:</strong> {task.description}</p>
-                <PriorityBadge priority={task.priority}>{task.priority}</PriorityBadge>
-                <p><strong>Fecha de Vencimiento:</strong> {task.dueDate}</p>
-                <p><strong>Estado:</strong> {task.status}</p>
-                <p><strong>Asignado a:</strong> {task.collaboratorAssignedName}</p>
-                <ToggleButton onClick={() => toggleCommentVisibility(task.id)}>
-                  {task.showComment ? 'Ocultar Comentario' : 'Dejar Comentario'}
-                </ToggleButton>
-                {task.showComment && (
-                  <CommentField 
-                    value={task.comment} 
-                    onChange={(e) => handleCommentChange(task.id, e.target.value)} 
-                    placeholder="Deja un comentario..."
-                  />
-                )}
-                <SmallButton onClick={() => handleStatusChange(task.id, 'in progress')}>
-                  Marcar como En Progreso
-                </SmallButton>
-                <SmallButton onClick={() => handleStatusChange(task.id, 'completed')}>
-                  Marcar como Completada
-                </SmallButton>
-              </TaskCard>
-            ))}
-          </Column>
-          <Column>
-            <h2>Tareas en Progreso</h2>
-            {tasks.filter(task => task.status === 'in progress').map((task) => (
-              <TaskCard key={task.id} status={task.status}>
-                <h3>{task.name}</h3>
-                <p><strong>Descripción:</strong> {task.description}</p>
-                <PriorityBadge priority={task.priority}>{task.priority}</PriorityBadge>
-                <p><strong>Fecha de Vencimiento:</strong> {task.dueDate}</p>
-                <p><strong>Estado:</strong> {task.status}</p>
-                <p><strong>Asignado a:</strong> {task.collaboratorAssignedName}</p>
+        <h2>All Tasks</h2>
+        <TaskGrid>
+          {tasks.map((task) => (
+            <TaskCard key={task.id} status={task.status}>
+              <h3>{task.name}</h3>
+              <p><strong>Description:</strong> {task.description}</p>
+              <PriorityBadge priority={task.priority}>{task.priority}</PriorityBadge>
+              <p><strong>Due Date:</strong> {task.dueDate}</p>
+              <p><strong>Status:</strong> {task.status}</p>
+              <p><strong>Assigned to:</strong> {task.collaboratorAssignedName}</p>
+              <ToggleButton onClick={() => toggleCommentVisibility(task.id)}>
+                {task.showComment ? 'Hide Comment' : 'Leave Comment'}
+              </ToggleButton>
+              {task.showComment && (
                 <CommentField 
                   value={task.comment} 
                   onChange={(e) => handleCommentChange(task.id, e.target.value)} 
-                  placeholder="Edita tu comentario..."
+                  placeholder="Leave a comment..."
                 />
-                <SmallButton onClick={() => handleStatusChange(task.id, 'pending')}>
-                  Marcar como Pendiente
-                </SmallButton>
-                <SmallButton onClick={() => handleStatusChange(task.id, 'completed')}>
-                  Marcar como Completada
-                </SmallButton>
-              </TaskCard>
-            ))}
-          </Column>
-          <Column>
-            <h2>Tareas Completadas</h2>
-            {tasks.filter(task => task.status === 'completed').map((task) => (
-              <TaskCard key={task.id} status={task.status}>
-                <h3>{task.name}</h3>
-                <p><strong>Descripción:</strong> {task.description}</p>
-                <PriorityBadge priority={task.priority}>{task.priority}</PriorityBadge>
-                <p><strong>Fecha de Vencimiento:</strong> {task.dueDate}</p>
-                <p><strong>Estado:</strong> {task.status}</p>
-                <p><strong>Asignado a:</strong> {task.collaboratorAssignedName}</p>
-                <CommentField 
-                  value={task.comment} 
-                  onChange={(e) => handleCommentChange(task.id, e.target.value)} 
-                  placeholder="Edita tu comentario..."
-                />
-                <SmallButton onClick={() => handleStatusChange(task.id, 'pending')}>
-                  Marcar como Pendiente
-                </SmallButton>
-                <SmallButton onClick={() => handleStatusChange(task.id, 'in progress')}>
-                  Marcar como En Progreso
-                </SmallButton>
-              </TaskCard>
-            ))}
-          </Column>
-        </TaskColumns>
+              )}
+              <SmallButton onClick={() => handleStatusChange(task.id, 'in progress')}>
+                Mark as In Progress
+              </SmallButton>
+              <SmallButton onClick={() => handleStatusChange(task.id, 'completed')}>
+                Mark as Completed
+              </SmallButton>
+              <SmallButton onClick={() => handleStatusChange(task.id, 'pending')}>
+                Mark as Pending
+              </SmallButton>
+            </TaskCard>
+          ))}
+        </TaskGrid>
       </Content>
     </Container>
   );
 }
 
-// Estilos
+export default Users;
+
+// Styles
 const Container = styled.div`
   font-family: 'Segoe UI', 'Arial', sans-serif;
   text-align: center;
@@ -266,15 +152,15 @@ const Content = styled.div`
   padding: 0 20px;
 `;
 
-const TaskColumns = styled.div`
-  display: flex;
-  justify-content: space-between;
+const TaskGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
   margin-top: 20px;
-`;
 
-const Column = styled.div`
-  flex: 1;
-  margin: 0 10px;
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const TaskCard = styled.div<{ status: string }>`
@@ -283,8 +169,6 @@ const TaskCard = styled.div<{ status: string }>`
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   text-align: left;
-  margin-bottom: 15px;
-  width: 100%;
   
   h3 {
     color: #28a745;

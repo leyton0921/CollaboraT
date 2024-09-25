@@ -1,70 +1,62 @@
-'use client';
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import Papa from 'papaparse';
-import { setUsers } from '../store/slices/usersSlice';
-import { User } from '../store/slices/usersSlice';
-import Style from '../styles/FileUpload.module.css';
-import { generatePassword } from '../controllers/password.controllers';
+"use client";
+import React, { useState } from "react";
+import Style from "../styles/FileUpload.module.css";
 
-const UploadCSV = ({ companyId }: { companyId: number }) => {
-    const dispatch = useDispatch();
-    const [fileName, setFileName] = useState('No hay archivos seleccionados');
+const UploadCSV = ({ companyId }: { companyId: string | null }) => {
+    const [fileName, setFileName] = useState("No files selected");
     const [loading, setLoading] = useState(false);
 
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
 
-        console.log('Archivo seleccionado:', file);
-
         if (file) {
             setFileName(file.name);
-
-            Papa.parse(file, {
-                header: true,
-                skipEmptyLines: true,
-                complete: (result) => {
-                    console.log('Contenido del CSV:', result.data);
-                    const users: User[] = result.data.map((row: any) => ({
-                        id: parseInt(row.id, 10),
-                        name: row.name,
-                        email: row.email,
-                        role: row.role,
-                        password: generatePassword(row.name),
-                        tasks: [],
-                    }));
-
-                    dispatch(setUsers(users));
-                    sendUsersToServer(users);
-                },
-                error: (error) => {
-                    console.error('Error parsing CSV:', error);
-                },
-            });
+            sendUsersToServer(file);
         } else {
-            console.error('No se seleccionó ningún archivo.');
+            console.error("No file selected.");
         }
     };
 
-    const sendUsersToServer = async (users: User[]) => {
+    const sendUsersToServer = async (file: File) => {
+        if (!companyId) {
+            console.error("companyId is not available.");
+            return;
+        }
+
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:5000/users', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(users),
-            });
+            console.log("Sending users to server");
+            const formData = new FormData();
+            formData.append("file", file);
+
+            const response = await fetch(
+                `http://localhost:4000/api/v1/auth/register/companies/${companyId}/collaborators`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                    },
+                    body: formData
+                }
+            );
 
             if (!response.ok) {
-                throw new Error('Error al enviar los usuarios al servidor');
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Error sending users to server");
             }
+            console.log("Users sent to the server");
 
-            const data = await response.json();
-            console.log('Usuarios registrados con éxito:', data);
+            const blob = await response.blob();
+            console.log(blob);
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "credentials.xlsx";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
         } catch (error) {
-            console.error('Error al enviar los usuarios al servidor:', error);
+            console.error("Error sending users to server:", error);
         } finally {
             setLoading(false);
         }
@@ -73,11 +65,10 @@ const UploadCSV = ({ companyId }: { companyId: number }) => {
     return (
         <div>
             <div className={Style["content-title"]}>
-                <h1>Task Assignment Dashboard</h1>
             </div>
             <div className={Style["file-upload-container"]}>
                 <label htmlFor="upload" className={Style["uploadButton"]}>
-                    <span className={Style["icon"]}>📁</span> Cargar
+                    <span className={Style["icon"]}>📁</span> Upload
                 </label>
                 <input
                     type="file"
@@ -87,15 +78,12 @@ const UploadCSV = ({ companyId }: { companyId: number }) => {
                     id="upload"
                 />
                 <span className={Style["fileName"]}>{fileName}</span>
-                <button 
-                    type="button"  // Asegúrate de que el tipo sea "button"
-                    className={Style["uploadButton"]} 
-                    disabled={loading} 
-                    onClick={(e) => { 
-                        e.preventDefault(); // Asegúrate de prevenir el comportamiento por defecto
-                    }}
+                <button
+                    type="button"
+                    className={Style["uploadButton"]}
+                    disabled={loading}
                 >
-                    {loading ? 'Cargando...' : 'Descargar'}
+                    {loading ? "Loading..." : "Download"}
                 </button>
             </div>
         </div>

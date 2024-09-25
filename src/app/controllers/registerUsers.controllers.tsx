@@ -1,6 +1,5 @@
 import { User } from "../store/slices/usersSlice";
 
-
 export const registerUsers = async (companyId: number, users: User[]) => {
     const token = localStorage.getItem('token');
 
@@ -15,14 +14,14 @@ export const registerUsers = async (companyId: number, users: User[]) => {
         });
 
         if (!response.ok) {
-            throw new Error(`Error al registrar los colaboradores: ${response.statusText}`);
+            throw new Error(`Error registering collaborators: ${response.statusText}`);
         }
 
         const data = await response.json();
-        console.log('Usuarios registrados con éxito:', data);
+        console.log('Users registered successfully:', data);
         return data;
     } catch (error) {
-        console.error('Error al enviar los usuarios al servidor:', error);
+        console.error('Error sending users to the server:', error);
         throw error;
     }
 };
